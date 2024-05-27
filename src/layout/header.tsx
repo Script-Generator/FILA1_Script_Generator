@@ -42,7 +42,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 p-4 shadow-sm z-50 bg-inherit">
+    <header className="top-0 left-0 right-0 p-4 shadow-sm bg-inherit sticky z-10 border-b">
       <div className="mx-auto flex justify-between">
         <div className="flex items-center gap-6">
           <a href="/">
@@ -54,7 +54,7 @@ const Header = () => {
         </div>
         <div className="flex items-center gap-4">
           <Button variant="outline" size="icon" onClick={handleResetClick}>
-            <RefreshCcw />
+            <RefreshCcw className="h-[1.2rem] w-[1.2rem]" />
           </Button>
           {ModeToggle()}
         </div>

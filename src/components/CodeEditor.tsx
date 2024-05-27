@@ -1,7 +1,7 @@
 import CodeMirror from "@uiw/react-codemirror";
 import { StreamLanguage } from "@codemirror/language";
 import { shell } from "@codemirror/legacy-modes/mode/shell";
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { Button } from "@/components/ui/button.tsx";
 import { basicLight, basicDark } from "@uiw/codemirror-theme-basic";
 import { useTheme } from "@/components/theme-provider";
@@ -49,11 +49,10 @@ const CodeEditor = () => {
       window.matchMedia("(prefers-color-scheme: dark)").matches);
 
   return (
-    <>
+    <div className="p-8">
       <CodeMirror
         className="text-left p-6"
         value={value}
-        height="600px"
         extensions={[StreamLanguage.define(shell)]}
         onChange={onChange}
         theme={isDarkMode ? basicDark : basicLight}
@@ -62,10 +61,10 @@ const CodeEditor = () => {
           tabSize: 4,
         }}
       />
-      <div className="flex justify-end mt-4">
+      <div className="mt-4 absolute bot-0 right-0 p-8">
         <Button className="">Export</Button>
       </div>
-    </>
+    </div>
   );
 };
 
