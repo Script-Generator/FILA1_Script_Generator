@@ -11,7 +11,11 @@
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.2",
+    "@radix-ui/react-label": "^2.0.2",
+    "@radix-ui/react-menubar": "^1.0.4",
+    "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-separator": "^1.0.3",
+    "@radix-ui/react-slot": "^1.0.2",
     "@uiw/codemirror-extensions-basic-setup": "^4.22.1",
     "@uiw/codemirror-extensions-langs": "^4.22.1",
     "@uiw/react-codemirror": "^4.22.1",

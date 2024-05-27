@@ -2,6 +2,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { StreamLanguage } from "@codemirror/language";
 import { shell } from "@codemirror/legacy-modes/mode/shell";
 import React from "react";
+import {Button} from "@/components/ui/button.tsx";
 
 const CodeEditor = () => {
   const [value, setValue] = React.useState(`
@@ -39,21 +40,22 @@ const CodeEditor = () => {
   }, []);
 
   return (
-    <CodeMirror
-      value={value}
-      height="600px"
-      extensions={[StreamLanguage.define(shell)]}
-      onChange={onChange}
-      basicSetup={{
-        lineNumbers: true,
-        tabSize: 4,
-        indentUnit: 4,
-        alignWideChars: false,
-        lineWrapping: true,
-        foldGutter: true,
-      }}
-      className="text-left"
-    />
+      <>
+          <CodeMirror value={value} height="600px" extensions={[StreamLanguage.define(shell)]}
+                      onChange={onChange}
+                      basicSetup={{
+                          lineNumbers: true,
+                          tabSize: 4,
+                          indentUnit: 4,
+                          alignWideChars: false,
+                          lineWrapping: true,
+                          foldGutter: true,
+                      }}
+                      className="text-left"/>
+          <div className="flex justify-end mt-4">
+              <Button className="">Export</Button>
+          </div>
+      </>
   );
 };
 
