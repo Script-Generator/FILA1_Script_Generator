@@ -3,24 +3,24 @@ import {
     ResizablePanel,
     ResizablePanelGroup,
 } from "@/components/ui/resizable"
-import {Separator} from "@/components/ui/separator.tsx";
 import CodeEditor from "@/components/CodeEditor.tsx";
+import FormParams from "@/components/FormParams.tsx";
+import Header from "@/layout/header.tsx";
 
 const MainPage = () => {
     return (
-        <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel>
-                <header>
-                    <h1>Script Generator</h1>
-                </header>
-                <Separator/>
-
-            </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel>
-                <CodeEditor/>
-            </ResizablePanel>
-        </ResizablePanelGroup>
+        <>
+            <Header/>
+            <ResizablePanelGroup direction="horizontal">
+                <ResizablePanel>
+                    <FormParams/>
+                </ResizablePanel>
+                <ResizableHandle withHandle/>
+                <ResizablePanel>
+                    <CodeEditor/>
+                </ResizablePanel>
+            </ResizablePanelGroup>
+        </>
     )
 }
 
