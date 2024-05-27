@@ -46,10 +46,6 @@ const CodeEditor = () => {
                       basicSetup={{
                           lineNumbers: true,
                           tabSize: 4,
-                          indentUnit: 4,
-                          alignWideChars: false,
-                          lineWrapping: true,
-                          foldGutter: true,
                       }}
                       className="text-left"/>
           <div className="flex justify-end mt-4">
