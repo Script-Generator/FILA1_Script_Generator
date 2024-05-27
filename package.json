@@ -19,6 +19,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@uiw/codemirror-extensions-basic-setup": "^4.22.1",
     "@uiw/codemirror-extensions-langs": "^4.22.1",
+    "@uiw/codemirror-theme-basic": "^4.22.1",
     "@uiw/react-codemirror": "^4.22.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",

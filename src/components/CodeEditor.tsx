@@ -1,11 +1,13 @@
 import CodeMirror from "@uiw/react-codemirror";
 import { StreamLanguage } from "@codemirror/language";
 import { shell } from "@codemirror/legacy-modes/mode/shell";
-import React from "react";
-import {Button} from "@/components/ui/button.tsx";
+import React, { useState, useCallback } from "react";
+import { Button } from "@/components/ui/button.tsx";
+import { basicLight, basicDark } from "@uiw/codemirror-theme-basic";
+import { useTheme } from "@/components/theme-provider";
 
 const CodeEditor = () => {
-  const [value, setValue] = React.useState(`
+  const [value, setValue] = useState(`
     #!/bin/bash
     
     # Display a welcome message
@@ -32,26 +34,38 @@ const CodeEditor = () => {
     
     # End of script
     echo "Script finished."
-    `);
+  `);
 
-  const onChange = React.useCallback((val: string) => {
+  const { theme } = useTheme();
+
+  const onChange = useCallback((val: string) => {
     console.log("val:", val);
     setValue(val);
   }, []);
 
+  const isDarkMode =
+    theme === "dark" ||
+    (theme === "system" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches);
+
   return (
-      <>
-          <CodeMirror value={value} height="600px" extensions={[StreamLanguage.define(shell)]}
-                      onChange={onChange}
-                      basicSetup={{
-                          lineNumbers: true,
-                          tabSize: 4,
-                      }}
-                      className="text-left"/>
-          <div className="flex justify-end mt-4">
-              <Button className="">Export</Button>
-          </div>
-      </>
+    <>
+      <CodeMirror
+        className="text-left p-6"
+        value={value}
+        height="600px"
+        extensions={[StreamLanguage.define(shell)]}
+        onChange={onChange}
+        theme={isDarkMode ? basicDark : basicLight}
+        basicSetup={{
+          lineNumbers: true,
+          tabSize: 4,
+        }}
+      />
+      <div className="flex justify-end mt-4">
+        <Button className="">Export</Button>
+      </div>
+    </>
   );
 };
 
