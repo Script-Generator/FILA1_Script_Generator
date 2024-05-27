@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 
 // Function to get random files from a directory
-function getRandomFilesByExtension(directory, extension, n) {
+function getRandomFilesNamesByExtension(directory, extension, n) {
     return new Promise((resolve, reject) => {
         fs.readdir(directory, (err, files) => {
             if (err) {
@@ -38,8 +38,8 @@ function getRandomFilesByExtension(directory, extension, n) {
     });
 }
 
-function runGetRandomFilesByExtension(directory, extension, n) {
-    return getRandomFilesByExtension(directory, extension, n)
+function getRandomFilesByExtension(directory, extension, n) {
+    return getRandomFilesNamesByExtension(directory, extension, n)
         .then(randomFiles => {
             console.log(`Random ${extension} files retrieved from ${directory}`);
             if (randomFiles.length > 0){
