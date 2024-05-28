@@ -23,7 +23,7 @@ export const FormProvider = ({ children }: { children: ReactNode }) => {
         population: { file: [] },
         logDir: '',
         args: '',
-        sbatch: [{ key: 'null', value: '' }],
+        sbatch: [{ key: '', value: '' }],
     });
 
     return (
