@@ -17,7 +17,7 @@ import {
     TabsTrigger,
 } from "@/components/ui/tabs"
 
-const ChoiceButton: React.FC = () => {
+const PopulationChoice: React.FC = () => {
     const [files, setFiles] = useState<File[]>([]);
 
     const handleFileUpload = (uploadedFile: File) => {
@@ -95,4 +95,4 @@ const ChoiceButton: React.FC = () => {
     );
 };
 
-export default ChoiceButton;
+export default PopulationChoice;
