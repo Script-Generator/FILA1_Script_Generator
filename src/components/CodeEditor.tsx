@@ -111,7 +111,6 @@ echo "Script finished."
           lineNumbers: true,
           tabSize: 4,
         }}
-        width=""
       />
       <div className="mt-4 p-8 flex-grow align self-end">
         <Button className="">Export</Button>
