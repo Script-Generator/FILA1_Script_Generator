@@ -1,15 +1,15 @@
 export interface FormObject {
     jar: Jar[]
-    ServerPath : string;
+    serverPath : string;
     population : Population;
     logDir : string;
     args : string;
-    sbatch : Sbatch;
+    sbatch : Sbatch[];
 }
 
 export interface Jar {
-    name: string;
-    config: string;
+    file: File| null;
+    jvmArgs: string;
 }
 
 export interface Population {
@@ -17,5 +17,6 @@ export interface Population {
 }
 
 export interface Sbatch {
-    params: string[];
+    key: string;
+    value: string;
 }
