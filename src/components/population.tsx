@@ -12,7 +12,7 @@ import {
   MenubarSubContent,
   MenubarSubTrigger,
   MenubarTrigger,
-} from "@/components/ui/menubar.tsx";
+} from '@/components/ui/menubar.tsx';
 
 const JobPopulation = () => {
   return (
@@ -75,12 +75,8 @@ const JobPopulation = () => {
           <MenubarMenu>
             <MenubarTrigger>View</MenubarTrigger>
             <MenubarContent>
-              <MenubarCheckboxItem>
-                Always Show Bookmarks Bar
-              </MenubarCheckboxItem>
-              <MenubarCheckboxItem checked>
-                Always Show Full URLs
-              </MenubarCheckboxItem>
+              <MenubarCheckboxItem>Always Show Bookmarks Bar</MenubarCheckboxItem>
+              <MenubarCheckboxItem checked>Always Show Full URLs</MenubarCheckboxItem>
               <MenubarSeparator />
               <MenubarItem inset>
                 Reload <MenubarShortcut>⌘R</MenubarShortcut>

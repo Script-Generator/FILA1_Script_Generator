@@ -1,10 +1,10 @@
-import CodeMirror from "@uiw/react-codemirror";
-import { StreamLanguage } from "@codemirror/language";
-import { shell } from "@codemirror/legacy-modes/mode/shell";
-import { useState, useCallback } from "react";
-import { Button } from "@/components/ui/button.tsx";
-import { basicLight, basicDark } from "@uiw/codemirror-theme-basic";
-import { useTheme } from "@/components/theme-provider";
+import CodeMirror from '@uiw/react-codemirror';
+import { StreamLanguage } from '@codemirror/language';
+import { shell } from '@codemirror/legacy-modes/mode/shell';
+import { useState, useCallback } from 'react';
+import { Button } from '@/components/ui/button.tsx';
+import { basicLight, basicDark } from '@uiw/codemirror-theme-basic';
+import { useTheme } from '@/components/theme-provider';
 
 const CodeEditor = () => {
   const [value, setValue] = useState(`
@@ -39,14 +39,12 @@ const CodeEditor = () => {
   const { theme } = useTheme();
 
   const onChange = useCallback((val: string) => {
-    console.log("val:", val);
+    console.log('val:', val);
     setValue(val);
   }, []);
 
   const isDarkMode =
-    theme === "dark" ||
-    (theme === "system" &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches);
+    theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   return (
     <div className="p-8">

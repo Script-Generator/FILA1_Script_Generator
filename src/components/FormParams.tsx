@@ -1,6 +1,6 @@
-import JobPopulation from "@/components/population.tsx";
-import Jar from "@/components/jar.tsx";
-import { Separator } from "@/components/ui/separator.tsx";
+import JobPopulation from '@/components/population.tsx';
+import Jar from '@/components/jar.tsx';
+import { Separator } from '@/components/ui/separator.tsx';
 
 const FormParams = () => {
   return (
