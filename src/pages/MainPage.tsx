@@ -14,7 +14,8 @@ const MainPage = () => {
       <div className="flex-1 flex overflow-hidden">
         <ResizablePanelGroup
           direction="horizontal"
-          className="flex-1 flex overflow-hidden">
+          className="flex-1 flex overflow-hidden"
+        >
           <ResizablePanel className="flex-1 flex">
             <FormParams />
           </ResizablePanel>
