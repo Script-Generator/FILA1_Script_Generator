@@ -8,8 +8,8 @@ const MainPage = () => {
     <div className="h-screen flex flex-col ">
       <Header />
       <div className="flex flex-1 overflow-hidden">
-        <ResizablePanelGroup direction="horizontal" className="flex-1 flex overflow-hidden ">
-          <ResizablePanel defaultSize={55} className="flex flex-1 min-w-96">
+        <ResizablePanelGroup direction="horizontal" className="flex-1 flex">
+          <ResizablePanel defaultSize={55} className="flex flex-1 min-w-96 !overflow-scroll">
             <FormParams />
           </ResizablePanel>
           <ResizableHandle withHandle />
