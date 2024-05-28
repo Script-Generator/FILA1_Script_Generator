@@ -1,13 +1,13 @@
-import './App.css'
+import "./App.css";
+import MainPage from "./pages/MainPage.tsx";
+import { ThemeProvider } from "@/components/theme-provider";
 
 function App() {
   return (
-      <>
-          <h1 className="text-3xl font-bold underline">
-              Hello world!
-          </h1>
-      </>
-  )
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <MainPage />
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;
