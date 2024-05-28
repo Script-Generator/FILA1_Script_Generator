@@ -1,5 +1,5 @@
-import fs from "fs";
-import path from "path";
+import fs from 'fs';
+import path from 'path';
 
 // Function to get random files from a directory
 function getRandomFilesNamesByExtension(directory, extension, n) {
@@ -57,7 +57,7 @@ function getRandomFilesByExtension(directory, extension, n) {
 }
 
 // Example usage
-const directory = "C:\\Users\\adamg\\Documents\\IMT\\1A\\Projet agile\\Test";
-const extension = ".txt";
+const directory = 'C:\\Users\\adamg\\Documents\\IMT\\1A\\Projet agile\\Test';
+const extension = '.txt';
 const n = 3000; // Number of random files to retrieve
 runGetRandomFilesByExtension(directory, extension, n);

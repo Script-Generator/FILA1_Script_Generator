@@ -1,48 +1,21 @@
 import { Input } from '@/components/ui/input.tsx';
+import React, { useState } from 'react';
 import { Label } from '@/components/ui/label.tsx';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select.tsx';
 
 const Jar = () => {
-  return (
-    <>
-      <div className="text-start">
-        <h2 className="text-xl font-bold">JAR Options</h2>
-        <p>.jar file upload or selection and arguments selection</p>
-        <Label htmlFor="customConfig">Custom config</Label>
-        <Input type="text" placeholder="lvl RESANA -limit (20m) -f -lc 1 -restarts [LUBY,500,5000] -valh MIN" />
-        <Label htmlFor="customConfig">AnotherInputConfig</Label>
-        <Input type="text" placeholder="-valh MIN" />
-        <Select>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select a fruit" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Others Params</SelectLabel>
-              <SelectItem value="apple">Titi</SelectItem>
-              <SelectItem value="banana">Toto</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
-      </div>
-    </>
-  );
-};
+  const [absolutePath, setAbsolutePath] = useState<string>('');
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [jvmArgs, setJvmArgs] = useState<string>('');
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setSelectedFile(event.target.files[0]);
+    }
+  };
 
   const handleJvmArgsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setJvmArgs(event.target.value);
   };
-  const handleAbsolutePathChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleAbsolutePathChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setAbsolutePath(event.target.value);
   };
 
@@ -56,26 +29,15 @@ const Jar = () => {
 
         <div className="flex-col">
           <Label htmlFor="jvmArgs">Absolute Path</Label>
-          <Input
-            type="text"
-            placeholder="/home/cprudhom/jars/"
-            value={jvmArgs}
-            onChange={handleAbsolutePathChange}
-          />
+          <Input type="text" placeholder="/home/cprudhom/jars/" value={jvmArgs} onChange={handleAbsolutePathChange} />
           <div className="flex gap-6 mt-4">
-            <input
-              id="fileUpload"
-              type="file"
-              accept=".jar"
-              onChange={handleFileChange}
-              style={{ display: "none" }}
-            />
+            <input id="fileUpload" type="file" accept=".jar" onChange={handleFileChange} style={{ display: 'none' }} />
             <button
-              onClick={() => document.getElementById("fileUpload")?.click()}
-              className={`px-4 py-2 rounded ${selectedFile ? "bg-secondaryGray cursor-not-allowed" : "bg-blackBleu text-white"}`}
+              onClick={() => document.getElementById('fileUpload')?.click()}
+              className={`px-4 py-2 rounded ${selectedFile ? 'bg-secondaryGray cursor-not-allowed' : 'bg-blackBleu text-white'}`}
               disabled={!!selectedFile}
             >
-              {selectedFile ? "Uploaded JAR" : "Upload JAR"}
+              {selectedFile ? 'Uploaded JAR' : 'Upload JAR'}
             </button>
             {selectedFile && (
               <div className="flex items-center">
