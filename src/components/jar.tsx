@@ -3,6 +3,7 @@ import React, {useState} from "react";
 import {Label} from "@/components/ui/label.tsx";
 
 const Jar = () => {
+  const [absolutePath, setAbsolutePath] = useState<string>("");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [jvmArgs, setJvmArgs] = useState<string>("");
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -14,6 +15,9 @@ const Jar = () => {
   const handleJvmArgsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setJvmArgs(event.target.value);
   };
+  const handleAbsolutePathChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setAbsolutePath(event.target.value);
+  };
 
   return (
       <>
@@ -24,7 +28,10 @@ const Jar = () => {
           </div>
 
           <div className="flex-col">
-            <div className="flex gap-6">
+            <Label htmlFor="jvmArgs">Absolute Path</Label>
+            <Input type="text" placeholder="/home/cprudhom/jars/" value={jvmArgs}
+                onChange={handleAbsolutePathChange}/>
+            <div className="flex gap-6 mt-4">
               <input id="fileUpload" type="file" accept=".jar" onChange={handleFileChange} style={{ display: "none" }}/>
               <button onClick={() => document.getElementById("fileUpload")?.click()}
                   className={`px-4 py-2 rounded ${selectedFile ? "bg-secondaryGray cursor-not-allowed" : "bg-blackBleu text-white"}`}
