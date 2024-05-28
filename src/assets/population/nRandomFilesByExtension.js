@@ -8,20 +8,14 @@ function getRandomFilesNamesByExtension(directory, extension, n) {
       if (err) {
         reject(err);
       } else {
-        const filteredFiles = files.filter(
-          (file) => path.extname(file) === extension,
-        );
+        const filteredFiles = files.filter((file) => path.extname(file) === extension);
         const totalFiles = filteredFiles.length;
 
         // Ensure n is not greater than the total number of files
         n = Math.min(n, totalFiles);
 
         if (n <= 0) {
-          reject(
-            new Error(
-              `No files with extension '${extension}' found in ${directory}`,
-            ),
-          );
+          reject(new Error(`No files with extension '${extension}' found in ${directory}`));
         } else {
           const randomFiles = [];
           const selectedIndices = new Set();
@@ -50,19 +44,15 @@ function getRandomFilesByExtension(directory, extension, n) {
       console.log(`Random ${extension} files retrieved from ${directory}`);
       if (randomFiles.length > 0) {
         if (randomFiles.length < n) {
-          console.log(
-            `Only ${randomFiles.length} files found with extension '${extension}' in ${directory}`,
-          );
+          console.log(`Only ${randomFiles.length} files found with extension '${extension}' in ${directory}`);
         }
         randomFiles.forEach((file) => console.log(file));
       } else {
-        throw new Error(
-          `No files with extension '${extension}' found in ${directory}`,
-        );
+        throw new Error(`No files with extension '${extension}' found in ${directory}`);
       }
     })
     .catch((err) => {
-      console.error("Error:", err);
+      console.error('Error:', err);
     });
 }
 

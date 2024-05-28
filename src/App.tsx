@@ -1,6 +1,6 @@
-import "./App.css";
-import MainPage from "./pages/MainPage.tsx";
-import { ThemeProvider } from "@/components/theme-provider";
+import './App.css';
+import MainPage from './pages/MainPage.tsx';
+import { ThemeProvider } from '@/components/theme-provider';
 
 function App() {
   return (
