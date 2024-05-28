@@ -1,6 +1,6 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
-import CodeEditor from '@/components/CodeEditor.tsx';
-import FormParams from '@/components/FormParams.tsx';
+import CodeEditor from '@/components/codeEditor.tsx';
+import FormParams from '@/components/formParams.tsx';
 import Header from '@/layout/header.tsx';
 
 const MainPage = () => {
