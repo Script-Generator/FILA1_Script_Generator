@@ -1,9 +1,15 @@
 import { Input } from '@/components/ui/input.tsx';
 import React, { useState } from 'react';
 import { Label } from '@/components/ui/label.tsx';
+import { useTheme } from '@/components/theme-provider.tsx';
 
 const Jar = () => {
-  const [absolutePath, setAbsolutePath] = useState<string>('');
+  const { theme } = useTheme();
+
+  const isDarkMode =
+    theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+  const [, setAbsolutePath] = useState<string>('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [jvmArgs, setJvmArgs] = useState<string>('');
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +40,15 @@ const Jar = () => {
             <input id="fileUpload" type="file" accept=".jar" onChange={handleFileChange} style={{ display: 'none' }} />
             <button
               onClick={() => document.getElementById('fileUpload')?.click()}
-              className={`px-4 py-2 rounded ${selectedFile ? 'bg-secondaryGray cursor-not-allowed' : 'bg-blackBleu text-white'}`}
+              className={`px-4 py-2 rounded ${
+                selectedFile
+                  ? isDarkMode
+                    ? 'bg-blackBleu text-white cursor-not-allowed'
+                    : 'bg-secondaryGray text-black cursor-not-allowed'
+                  : isDarkMode
+                    ? 'bg-secondaryGray text-black'
+                    : 'bg-blackBleu text-white'
+              }`}
               disabled={!!selectedFile}
             >
               {selectedFile ? 'Uploaded JAR' : 'Upload JAR'}
