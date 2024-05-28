@@ -7,7 +7,6 @@ interface DropZoneProps {
 
 const DropZoneComponent: React.FC<DropZoneProps> = ({ onFileUpload }) => {
     const onDrop = useCallback((acceptedFiles: File[]) => {
-        // Ensure only one file is accepted
         if (acceptedFiles.length === 1 && acceptedFiles[0].name.endsWith('.zip')) {
             onFileUpload(acceptedFiles[0]);
         }
@@ -21,13 +20,12 @@ const DropZoneComponent: React.FC<DropZoneProps> = ({ onFileUpload }) => {
     return (
         <div
             {...getRootProps() as DropzoneRootProps}
-            className={`border-2 border-dashed p-4 rounded-md ${isDragActive ? 'border-blue-500' : 'border-gray-300'}`}
-        >
+            className={`border-2 border-dashed p-4 rounded-md ${isDragActive ? 'border-blue-500' : 'border-gray-300'}`}>
             <input {...getInputProps() as DropzoneInputProps} />
             {
                 isDragActive ?
                     <p className="text-center">Drop the .zip file here...</p> :
-                    <p className="text-center">Drag 'n' drop a .zip file here, or click to select a .zip file</p>
+                    <p className="text-center">Drag and drop a .zip file here or click</p>
             }
         </div>
     );

@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import TagComponent from "@/components/population/tagComponent.tsx";
 import DropZoneComponent from "@/components/population/dropzoneComponent.tsx";
-import "./style.css";
 import {
     Card,
     CardContent,
@@ -21,11 +20,11 @@ const PopulationChoice: React.FC = () => {
     const [files, setFiles] = useState<File[]>([]);
 
     const handleFileUpload = (uploadedFile: File) => {
-        setFiles([uploadedFile]); // Replace existing files with the new one
+        setFiles([uploadedFile]);
     };
 
     const handleRemoveFile = () => {
-        setFiles([]); // Clear files when removing
+        setFiles([]);
     };
 
     return (
@@ -43,7 +42,7 @@ const PopulationChoice: React.FC = () => {
             {files.length > 0 && (
                 <Label>
                     Selected file :
-                    <span>
+                    <span className="ml-3">
                         <TagComponent file={files[0]} onRemove={handleRemoveFile}/>
                     </span>
                 </Label>

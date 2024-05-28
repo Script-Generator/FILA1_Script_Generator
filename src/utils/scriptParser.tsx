@@ -1,4 +1,4 @@
-import { FormObject } from '@/model/formObject';
+import { FormObject } from '@/context/formObject';
 
 export class ScriptParser {
   private formData: FormObject;

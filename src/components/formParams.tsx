@@ -8,8 +8,9 @@ const FormParams = () => {
   return (
     <FormProvider>
       <div className="p-8">
-        <div className="flex-col p-2 space-y-10">
+        <div className="flex-col p-2 space-y-8">
           <ServerPath />
+          <Separator />
           <PopulationChoice />
           <Separator />
           <Jar />

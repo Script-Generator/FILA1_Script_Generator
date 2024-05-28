@@ -8,7 +8,7 @@ import { useTheme } from '@/components/theme-provider';
 
 
 import { ScriptParser } from '@/utils/scriptParser';
-import { FormObject } from '@/model/formObject';
+import { FormObject } from '@/context/formObject';
 
 const CodeEditor = () => {
   const { theme } = useTheme();

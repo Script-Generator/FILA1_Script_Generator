@@ -79,7 +79,7 @@ const Header = () => {
             <h1 className="text-2xl font-bold text-start">Script Generator</h1>
           </a>
           <Button variant="ghost">
-            <a href="https://github.com/Script-Generator/FILA1_Script_Generator">
+            <a href="https://github.com/Script-Generator/FILA1_Script_Generator#readme">
               <p>Documentation</p>
             </a>
           </Button>
