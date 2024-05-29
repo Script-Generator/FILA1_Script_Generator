@@ -3,7 +3,10 @@ name: Build and Test
 on:
   push:
     branches:
-      - 44-github-action
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build:
