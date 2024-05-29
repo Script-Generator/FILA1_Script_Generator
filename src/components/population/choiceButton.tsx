@@ -15,6 +15,7 @@ import {
     TabsList,
     TabsTrigger,
 } from "@/components/ui/tabs"
+import {FileFormatEnum} from "@/utils/fileFormatEnum";
 
 const PopulationChoice: React.FC = () => {
     const [files, setFiles] = useState<File[]>([]);
@@ -43,12 +44,12 @@ const PopulationChoice: React.FC = () => {
                 <Label>
                     Selected file :
                     <span className="ml-3">
-                        <TagComponent file={files[0]} onRemove={handleRemoveFile}/>
+                        <TagComponent file={files[0]} onRemove={handleRemoveFile} icon={"📁"}/>
                     </span>
                 </Label>
             )}
 
-            <DropZoneComponent onFileUpload={handleFileUpload}/>
+            <DropZoneComponent onFileUpload={handleFileUpload} allowedExtension={FileFormatEnum.ZIP}/>
 
             <Tabs defaultValue="all" className="flex-col">
                 <TabsList className="flex w-full">
