@@ -1,7 +1,7 @@
 import React from 'react';
-import { Input } from '@/components/ui/input.tsx';
-import { Label } from '@/components/ui/label.tsx';
-import { useFormContext } from '@/context/formContext.tsx';
+import {Input} from '@/components/ui/input.tsx';
+import {Label} from '@/components/ui/label.tsx';
+import {useFormContext} from '@/context/formContext.tsx';
 
 const ServerPath = () => {
     const { formObject, setFormObject } = useFormContext();
@@ -9,9 +9,7 @@ const ServerPath = () => {
     const handleServerPathChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const newPath = event.target.value;
         setFormObject((prev) => {
-            const newObj = { ...prev, serverPath: newPath };
-            console.log("Updated formObject:", newObj);
-            return newObj;
+            return {...prev, serverPath: newPath};
         });
     };
 

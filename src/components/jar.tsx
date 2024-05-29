@@ -15,7 +15,6 @@ const Jar = () => {
         const newFormObject = [...formObject.jar];
         newFormObject[index] = { ...newFormObject[index], name: name };
         setFormObject(prev => ({ ...prev, jar: newFormObject }));
-        console.log(formObject)
     };
 
     const handleFileUpload = (index: number, uploadedFile: File) => {
@@ -26,7 +25,6 @@ const Jar = () => {
         const newFormObject = [...formObject.jar];
         newFormObject[index] = { name: uploadedFile.name, file: uploadedFile, jvmArgs: '' };
         setFormObject(prev => ({ ...prev, jar: newFormObject }));
-        console.log(formObject)
     };
 
     const handleRemoveFile = (index: number) => {
@@ -35,7 +33,6 @@ const Jar = () => {
 
         const newFormObject = [...formObject.jar.slice(0, index), ...formObject.jar.slice(index + 1)];
         setFormObject(prev => ({ ...prev, jar: newFormObject }));
-        console.log(formObject)
     };
 
     const handleJvmArgsChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +43,6 @@ const Jar = () => {
         const newFormObject = [...formObject.jar];
         newFormObject[index] = { ...newFormObject[index], jvmArgs: event.target.value };
         setFormObject(prev => ({ ...prev, jar: newFormObject }));
-        console.log(formObject)
     };
 
     return (
