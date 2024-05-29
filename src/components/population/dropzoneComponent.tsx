@@ -3,14 +3,15 @@ import { useDropzone, DropzoneRootProps, DropzoneInputProps } from 'react-dropzo
 
 interface DropZoneProps {
     onFileUpload: (file: File) => void;
+    allowedExtension: string;
 }
 
-const DropZoneComponent: React.FC<DropZoneProps> = ({ onFileUpload }) => {
+const DropZoneComponent: React.FC<DropZoneProps> = ({ onFileUpload, allowedExtension }) => {
     const onDrop = useCallback((acceptedFiles: File[]) => {
-        if (acceptedFiles.length === 1 && acceptedFiles[0].name.endsWith('.zip')) {
+        if (acceptedFiles.length === 1 && acceptedFiles[0].name.endsWith(allowedExtension)) {
             onFileUpload(acceptedFiles[0]);
         }
-    }, [onFileUpload]);
+    }, [onFileUpload, allowedExtension]);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
@@ -24,11 +25,12 @@ const DropZoneComponent: React.FC<DropZoneProps> = ({ onFileUpload }) => {
             <input {...getInputProps() as DropzoneInputProps} />
             {
                 isDragActive ?
-                    <p className="text-center">Drop the .zip file here...</p> :
-                    <p className="text-center">Drag and drop a .zip file here or click</p>
+                    <p className="text-center">Drop the {allowedExtension} file here...</p> :
+                    <p className="text-center">Drag and drop a {allowedExtension} file here or click</p>
             }
         </div>
     );
 };
 
 export default DropZoneComponent;
+
