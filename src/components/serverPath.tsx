@@ -19,7 +19,7 @@ const ServerPath = () => {
         <div className="flex flex-col text-start gap-6">
             <div>
                 <h2 className="text-xl font-bold">Path Server</h2>
-                <Label htmlFor="serverPath">Enter the path where your server files are located:</Label>
+                <Label htmlFor="serverPath">Enter the path where your server files are located</Label>
             </div>
             <Input id="serverPath" type="text" placeholder="/home/cprudhom/"
                 value={formObject.serverPath}

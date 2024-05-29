@@ -8,6 +8,7 @@ export interface FormObject {
 }
 
 export interface Jar {
+    name: string;
     file: File| null;
     jvmArgs: string;
 }
