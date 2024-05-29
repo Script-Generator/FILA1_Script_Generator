@@ -6,7 +6,7 @@ Welcome to the **Script Generator Batch** project !
 
 To use this application, you need the following:
 
-1. A JAR file of the application.
+1. One or several JAR file(s) of the application.
 2. A ZIP file containing `population`.
 
 ## Installation
@@ -37,7 +37,21 @@ The folder structure should look like this on the server:
    .
    ├── log
    ├── population
-   └── file.jar
+   ├── jar
+   └── script.sh
+   ```
+
+## Using Docker
+
+1. Build the Docker Image:
+   ```sh
+   docker-compose build
+   ```
+
+2. Run the Docker Container:
+
+   ```sh
+   docker-compose up
    ```
 
 ## Contributors
@@ -45,4 +59,4 @@ The folder structure should look like this on the server:
 - Adam Guillet
 - Tom Freret
 - Titouan Cocheril
-- Leo Joly--Jehenne
+- Leo Joly-Jehenne
