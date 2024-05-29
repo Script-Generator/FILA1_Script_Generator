@@ -6,6 +6,7 @@ import TagComponent from "@/components/population/tagComponent";
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Card} from "@/components/ui/card.tsx";
+import {FileFormatEnum} from "@/utils/fileFormatEnum";
 
 const Jar = () => {
     const {theme} = useTheme();
@@ -64,7 +65,7 @@ const Jar = () => {
                     </div>
                 </Card>
             ))}
-            <DropZoneComponent onFileUpload={handleFileUpload} allowedExtension=".jar"/>
+            <DropZoneComponent onFileUpload={handleFileUpload} allowedExtension={FileFormatEnum.JAR}/>
         </div>
     );
 };
