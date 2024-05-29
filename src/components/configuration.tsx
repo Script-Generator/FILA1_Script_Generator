@@ -65,12 +65,12 @@ const Configuration: React.FC = () => {
                 <div className="flex flex-col gap-2">
                     <Input
                         type="text"
-                        placeholder="Configration Name"
+                        placeholder="Configuration Name"
                         value={newConfName}
                         onChange={(e) => setNewConfName(e.target.value)}
                     />
                 </div>
-                <Button onClick={handleSaveConf}>Save</Button>
+                <Button onClick={handleSaveConf} disabled={!newConfName}>Save</Button>
             </div>
         </div>
     );
