@@ -8,12 +8,15 @@ export interface FormObject {
 }
 
 export interface Jar {
+    name: string;
     file: File| null;
     jvmArgs: string;
 }
 
 export interface Population {
-    file: string[];
+    name: string;
+    file: File | null;
+    params: string | number ;
 }
 
 export interface Sbatch {

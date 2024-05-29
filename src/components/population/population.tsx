@@ -1,27 +1,59 @@
-import React, {useState} from 'react';
-import TagComponent from "@/components/population/tagComponent.tsx";
-import DropZoneComponent from "@/components/population/dropzoneComponent.tsx";
+import React, { useState } from 'react';
 import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
-} from "@/components/ui/card"
-import {Input} from "@/components/ui/input"
-import {Label} from "@/components/ui/label"
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
     Tabs,
     TabsContent,
     TabsList,
     TabsTrigger,
-} from "@/components/ui/tabs"
-import {FileFormatEnum} from "@/utils/fileFormatEnum";
+} from '@/components/ui/tabs.tsx';
+import DropZoneComponent from "@/components/population/dropzoneComponent.tsx";
+import {useFormContext} from "@/context/formContext.tsx";
 
-const PopulationChoice: React.FC = () => {
+interface TagProps {
+    file: File;
+    onRemove: (file: File) => void;
+}
+
+const TagComponent: React.FC<TagProps> = ({ file, onRemove }) => {
+    return (
+        <span className="inline-flex items-center bg-gray-200 text-gray-700 px-2 py-1 rounded-full">
+            {file.name}
+            <button
+                onClick={() => onRemove(file)}
+                className="ml-2 text-red-500 hover:text-red-700 focus:outline-none">
+                &times;
+            </button>
+        </span>
+    );
+};
+
+
+const Population = () => {
+    const { formObject, setFormObject } = useFormContext();
     const [files, setFiles] = useState<File[]>([]);
+
+    const handleParamsInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = event.target.value;
+        setFormObject(prev => ({...prev, population: {...prev.population, params: newValue}
+        }));
+    };
 
     const handleFileUpload = (uploadedFile: File) => {
         setFiles([uploadedFile]);
+        setFormObject(prev => ({...prev, population: {...prev.population, file: uploadedFile,}
+        }));
+    };
+
+    const handleNameUpdate = (name: string) => {
+        setFormObject(prev => ({...prev, population: {...prev.population, name: name,}
+        }));
     };
 
     const handleRemoveFile = () => {
@@ -30,7 +62,7 @@ const PopulationChoice: React.FC = () => {
 
     return (
         <>
-            <h1 className="text-2xl font-bold text-start">Tested Population</h1>
+            <h1 className="text-xl font-bold text-start">Tested Population</h1>
 
             {/* Label when nothing is selected  */}
             {files.length === 0 && (
@@ -44,12 +76,12 @@ const PopulationChoice: React.FC = () => {
                 <Label>
                     Selected file :
                     <span className="ml-3">
-                        <TagComponent file={files[0]} onRemove={handleRemoveFile} icon={"📁"}/>
+                        <TagComponent file={files[0]} onRemove={handleRemoveFile}/>
                     </span>
                 </Label>
             )}
 
-            <DropZoneComponent onFileUpload={handleFileUpload} allowedExtension={FileFormatEnum.ZIP}/>
+            <DropZoneComponent onFileUpload={handleFileUpload} onNameUpdate={handleNameUpdate} />
 
             <Tabs defaultValue="all" className="flex-col">
                 <TabsList className="flex w-full">
@@ -72,7 +104,7 @@ const PopulationChoice: React.FC = () => {
                         <CardContent className="space-y-2">
                             <div className="space-y-1">
                                 <CardDescription>Choose the number of random files</CardDescription>
-                                <Input id="numberFile"/>
+                                <Input value={formObject.population.params} onChange={handleParamsInputChange} id="numberFile"/>
                             </div>
                         </CardContent>
                     </Card>
@@ -85,7 +117,7 @@ const PopulationChoice: React.FC = () => {
                         <CardContent className="space-y-2">
                             <div className="space-y-1">
                                 <CardDescription>Specify custom criteria for file selection.</CardDescription>
-                                <Input id="customCriteria"/>
+                                <Input value={formObject.population.params} onChange={handleParamsInputChange} id="customCriteria"/>
                             </div>
                         </CardContent>
                     </Card>
@@ -95,4 +127,4 @@ const PopulationChoice: React.FC = () => {
     );
 };
 
-export default PopulationChoice;
+export default Population;
