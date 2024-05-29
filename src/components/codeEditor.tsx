@@ -1,41 +1,36 @@
 import CodeMirror from '@uiw/react-codemirror';
 import { StreamLanguage } from '@codemirror/language';
 import { shell } from '@codemirror/legacy-modes/mode/shell';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Button } from '@/components/ui/button.tsx';
 import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
 import { useTheme } from '@/components/theme-provider';
 
-
-import { ScriptParser } from '@/utils/scriptParser';
-import { FormObject } from '@/context/formObject';
+import { ScriptBuilder } from '@/utils/scriptBuilder';
+import { useFormContext } from '@/context/formContext';
 
 const CodeEditor = () => {
   const { theme } = useTheme();
   const isDarkMode =
     theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
+  const { formObject } = useFormContext();
+  const [value, setValue] = useState('');
 
-    const test : FormObject = ({
-      jar: [{ file: null, jvmArgs: '' }],
-      serverPath: '/home/test',
-      population: { file: [] },
-      logDir: '',
-      args: '',
-      sbatch: [{key: 'test', value: '1'}, {key: 'other', value: '2'}],
-  });
+  useEffect(() => {
+    const newValue = new ScriptBuilder(formObject).export();
+    console.log(newValue);
+    setValue(newValue);
+  }, [formObject]);
 
-  const [value] = useState(new ScriptParser(test).export());
-
-  // TODO Sprint 2
   const onChange = useCallback((codeEditorValue: string) => {
     console.log('code editor:', codeEditorValue);
   }, []);
 
   return (
-    <div className="p-8 flex flex-col w-full">
+    <div className="p-4 flex flex-col w-full">
       <CodeMirror
-        className="text-left p-6 flex-grow overflow-scroll"
+        className="text-left flex-grow overflow-scroll"
         value={value}
         extensions={[StreamLanguage.define(shell)]}
         onChange={onChange}
