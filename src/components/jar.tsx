@@ -1,34 +1,45 @@
-import React, {useState} from 'react';
-import {useTheme} from '@/components/theme-provider';
-import {useFormContext} from '@/context/formContext';
+import React, { useState } from 'react';
+import { useFormContext } from '@/context/formContext';
 import DropZoneComponent from "@/components/population/dropzoneComponent";
 import TagComponent from "@/components/population/tagComponent";
-import {Label} from "@/components/ui/label";
-import {Input} from "@/components/ui/input";
-import {Card} from "@/components/ui/card.tsx";
-import {FileFormatEnum} from "@/utils/fileFormatEnum";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Card } from "@/components/ui/card.tsx";
+import { FileFormatEnum } from "@/utils/fileFormatEnum";
 
+//TODO fix jar dropzone
 const Jar = () => {
-    const {theme} = useTheme();
-    theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    useFormContext();
+    const { formObject, setFormObject } = useFormContext();
+    const [files, setFiles] = useState<{ name: string, file: File, jvmArgs: string }[]>([]);
 
-    const [files, setFiles] = useState<{ file: File, jvmArgs: string }[]>([]);
+    const handleNameUpdate = (name: string) => {
+        setFormObject(prev => ({ ...prev, jar: { ...prev.jar, name: name } }));
+    };
 
     const handleFileUpload = (uploadedFile: File) => {
-        setFiles((prevFiles) => [...prevFiles, {file: uploadedFile, jvmArgs: ''}]);
+        const newFiles = [...files, { name: uploadedFile.name, file: uploadedFile, jvmArgs: '' }];
+        setFiles(newFiles);
+
+        const newFormObject = [...formObject.jar, { name: '', file: uploadedFile, jvmArgs: '' }];
+        setFormObject(prev => ({ ...prev, jar: newFormObject }));
     };
 
     const handleRemoveFile = (index: number) => {
-        setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+        const newFiles = files.filter((_, i) => i !== index);
+        setFiles(newFiles);
+
+        const newFormObject = [...formObject.jar.slice(0, index), ...formObject.jar.slice(index + 1)];
+        setFormObject(prev => ({ ...prev, jar: newFormObject }));
     };
 
     const handleJvmArgsChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-        setFiles((prevFiles) => {
-            const newFiles = [...prevFiles];
-            newFiles[index].jvmArgs = event.target.value;
-            return newFiles;
-        });
+        const newFiles = [...files];
+        newFiles[index].jvmArgs = event.target.value;
+        setFiles(newFiles);
+
+        const newFormObject = [...formObject.jar];
+        newFormObject[index] = { ...newFormObject[index], jvmArgs: event.target.value };
+        setFormObject(prev => ({ ...prev, jar: newFormObject }));
     };
 
     return (
@@ -38,16 +49,15 @@ const Jar = () => {
                 <p>.jar file upload or selection and arguments selection</p>
             </div>
             {files.map((fileObj, index) => (
-                <Card className={'p-4'}>
-                    <div key={index} className="flex-col mb-6">
+                <Card key={index} className="p-4">
+                    <div className="flex-col mb-6">
                         <div className="flex gap-6 mb-2 items-center">
                             <div className="flex items-center">
                                 <Label>
                                     Selected file :
                                     <span className="ml-3">
-                                    <TagComponent file={fileObj.file} onRemove={() => handleRemoveFile(index)}
-                                                  icon="📄"/>
-                                </span>
+                                        <TagComponent file={fileObj.file} onRemove={() => handleRemoveFile(index)} icon="📄" />
+                                    </span>
                                 </Label>
                             </div>
                         </div>
@@ -65,7 +75,11 @@ const Jar = () => {
                     </div>
                 </Card>
             ))}
-            <DropZoneComponent onFileUpload={handleFileUpload} allowedExtension={FileFormatEnum.JAR}/>
+            <DropZoneComponent
+                onFileUpload={handleFileUpload}
+                allowedExtension={FileFormatEnum.JAR}
+                onNameUpdate={handleNameUpdate}
+            />
         </div>
     );
 };

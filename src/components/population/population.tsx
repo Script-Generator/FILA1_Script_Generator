@@ -15,24 +15,9 @@ import {
 } from '@/components/ui/tabs.tsx';
 import DropZoneComponent from "@/components/population/dropzoneComponent.tsx";
 import {useFormContext} from "@/context/formContext.tsx";
+import TagComponent from "@/components/population/tagComponent.tsx";
+import {FileFormatEnum} from "@/utils/fileFormatEnum.ts";
 
-interface TagProps {
-    file: File;
-    onRemove: (file: File) => void;
-}
-
-const TagComponent: React.FC<TagProps> = ({ file, onRemove }) => {
-    return (
-        <span className="inline-flex items-center bg-gray-200 text-gray-700 px-2 py-1 rounded-full">
-            {file.name}
-            <button
-                onClick={() => onRemove(file)}
-                className="ml-2 text-red-500 hover:text-red-700 focus:outline-none">
-                &times;
-            </button>
-        </span>
-    );
-};
 
 
 const Population = () => {
@@ -81,7 +66,7 @@ const Population = () => {
                 </Label>
             )}
 
-            <DropZoneComponent onFileUpload={handleFileUpload} onNameUpdate={handleNameUpdate} />
+            <DropZoneComponent onFileUpload={handleFileUpload} allowedExtension={FileFormatEnum.ZIP} onNameUpdate={handleNameUpdate} />
 
             <Tabs defaultValue="all" className="flex-col">
                 <TabsList className="flex w-full">

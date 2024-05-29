@@ -20,7 +20,7 @@ export const FormProvider = ({ children }: { children: ReactNode }) => {
     const [formObject, setFormObject] = useState<FormObject>({
         jar: [{ name: '',file: null, jvmArgs: '' }],
         serverPath: '',
-        population: { name: '', file: null, params: null },
+        population: { name: '', file: null, params: '' },
         logDir: '',
         args: '',
         sbatch: [{ key: '', value: '' }],
