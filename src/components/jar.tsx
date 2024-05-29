@@ -7,21 +7,26 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card.tsx";
 import { FileFormatEnum } from "@/utils/fileFormatEnum";
 
-//TODO fix jar dropzone
 const Jar = () => {
     const { formObject, setFormObject } = useFormContext();
     const [files, setFiles] = useState<{ name: string, file: File, jvmArgs: string }[]>([]);
 
-    const handleNameUpdate = (name: string) => {
-        setFormObject(prev => ({ ...prev, jar: { ...prev.jar, name: name } }));
+    const handleNameUpdate = (index: number, name: string) => {
+        const newFormObject = [...formObject.jar];
+        newFormObject[index] = { ...newFormObject[index], name: name };
+        setFormObject(prev => ({ ...prev, jar: newFormObject }));
+        console.log(formObject)
     };
 
-    const handleFileUpload = (uploadedFile: File) => {
-        const newFiles = [...files, { name: uploadedFile.name, file: uploadedFile, jvmArgs: '' }];
+    const handleFileUpload = (index: number, uploadedFile: File) => {
+        const newFiles = [...files];
+        newFiles[index] = { name: uploadedFile.name, file: uploadedFile, jvmArgs: '' };
         setFiles(newFiles);
 
-        const newFormObject = [...formObject.jar, { name: '', file: uploadedFile, jvmArgs: '' }];
+        const newFormObject = [...formObject.jar];
+        newFormObject[index] = { name: uploadedFile.name, file: uploadedFile, jvmArgs: '' };
         setFormObject(prev => ({ ...prev, jar: newFormObject }));
+        console.log(formObject)
     };
 
     const handleRemoveFile = (index: number) => {
@@ -30,6 +35,7 @@ const Jar = () => {
 
         const newFormObject = [...formObject.jar.slice(0, index), ...formObject.jar.slice(index + 1)];
         setFormObject(prev => ({ ...prev, jar: newFormObject }));
+        console.log(formObject)
     };
 
     const handleJvmArgsChange = (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,6 +46,7 @@ const Jar = () => {
         const newFormObject = [...formObject.jar];
         newFormObject[index] = { ...newFormObject[index], jvmArgs: event.target.value };
         setFormObject(prev => ({ ...prev, jar: newFormObject }));
+        console.log(formObject)
     };
 
     return (
@@ -76,9 +83,9 @@ const Jar = () => {
                 </Card>
             ))}
             <DropZoneComponent
-                onFileUpload={handleFileUpload}
+                onFileUpload={(uploadedFile: File) => handleFileUpload(files.length, uploadedFile)}
                 allowedExtension={FileFormatEnum.JAR}
-                onNameUpdate={handleNameUpdate}
+                onNameUpdate={(name: string) => handleNameUpdate(files.length - 1, name)}
             />
         </div>
     );
