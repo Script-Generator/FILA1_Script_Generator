@@ -6,21 +6,26 @@ import Args from "@/components/args.tsx";
 import Sbatch from "@/components/sbatch.tsx";
 import Population from "@/components/population/population.tsx";
 
+const components = [
+  Configuration,
+  ServerPath,
+  Population,
+  Jar,
+  Args,
+  Sbatch
+];
+
+
 const FormParams = () => {
   return (
       <div className="p-8">
-        <div className="flex-col p-2 space-y-8">
-          <Configuration/>
-          <Separator/>
-          <ServerPath />
-          <Separator />
-          <Population />
-          <Separator />
-          <Jar />
-          <Separator/>
-          <Args/>
-          <Separator/>
-          <Sbatch/>
+        <div className="flex flex-col space-y-8">
+          {components.map((Component, index) => (
+              <div key={index} className="space-y-8">
+                <Component />
+                {index < components.length - 1 && <Separator />}
+              </div>
+          ))}
         </div>
       </div>
   );
