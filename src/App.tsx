@@ -8,7 +8,7 @@ import { FormProvider } from './context/formContext';
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <div className="h-screen flex flex-col mb-10">
         <Header />
         <FormProvider>

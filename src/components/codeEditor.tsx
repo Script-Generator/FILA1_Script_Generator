@@ -10,9 +10,9 @@ import { useFormContext } from '@/context/formContext';
 
 import ZipGeneratorComponent from "@/context/zipGenerator.tsx";
 const CodeEditor = () => {
-  const { theme } = useTheme();
-  const isDarkMode =
-    theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const {theme} = useTheme();
+    const isDarkMode =
+        theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
 
   const { formObject } = useFormContext();
   const [value, setValue] = useState('');
