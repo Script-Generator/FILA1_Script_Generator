@@ -8,8 +8,8 @@ interface ZipGeneratorComponentProps {
     codeEditorValue: string;
 }
 
-const ZipGeneratorComponent: React.FC<ZipGeneratorComponentProps> = ({codeEditorValue}) => {
-    const {formObject} = useFormContext();
+const {formObject} = useFormContext();
+const ZipGeneratorComponent: React.FC<ZipGeneratorComponentProps> = ({ codeEditorValue }) => {
 
     const handleDownloadClick = () => {
         const zip = new JSZip();
