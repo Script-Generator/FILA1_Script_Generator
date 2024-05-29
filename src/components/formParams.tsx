@@ -2,10 +2,10 @@ import Jar from '@/components/jar.tsx';
 import { Separator } from '@/components/ui/separator.tsx';
 import { FormProvider } from '@/context/formContext.tsx';
 import ServerPath from '@/components/serverPath.tsx';
-import PopulationChoice from '@/components/population/choiceButton.tsx';
 import Configuration from "@/components/configuration.tsx";
 import Args from "@/components/args.tsx";
 import Sbatch from "@/components/sbatch.tsx";
+import Population from "@/components/population/population.tsx";
 
 const FormParams = () => {
   return (
@@ -16,7 +16,7 @@ const FormParams = () => {
           <Separator/>
           <ServerPath />
           <Separator />
-          <PopulationChoice />
+          <Population />
           <Separator />
           <Jar />
           <Separator/>

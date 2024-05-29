@@ -3,15 +3,17 @@ import { useDropzone, DropzoneRootProps, DropzoneInputProps } from 'react-dropzo
 
 interface DropZoneProps {
     onFileUpload: (file: File) => void;
-    allowedExtension: string;
+    onNameUpdate: (name: string) => void;
 }
 
-const DropZoneComponent: React.FC<DropZoneProps> = ({ onFileUpload, allowedExtension }) => {
+const DropZoneComponent: React.FC<DropZoneProps> = ({ onFileUpload, onNameUpdate }) => {
     const onDrop = useCallback((acceptedFiles: File[]) => {
-        if (acceptedFiles.length === 1 && acceptedFiles[0].name.endsWith(allowedExtension)) {
-            onFileUpload(acceptedFiles[0]);
+        if (acceptedFiles.length === 1 && acceptedFiles[0].name.endsWith('.zip')) {
+            const file = acceptedFiles[0];
+            onFileUpload(file);
+            onNameUpdate(file.name); // Update the name in the formObject
         }
-    }, [onFileUpload, allowedExtension]);
+    }, [onFileUpload, onNameUpdate]);
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
@@ -25,12 +27,11 @@ const DropZoneComponent: React.FC<DropZoneProps> = ({ onFileUpload, allowedExten
             <input {...getInputProps() as DropzoneInputProps} />
             {
                 isDragActive ?
-                    <p className="text-center">Drop the {allowedExtension} file here...</p> :
-                    <p className="text-center">Drag and drop a {allowedExtension} file here or click</p>
+                    <p className="text-center">Drop the .zip file here...</p> :
+                    <p className="text-center">Drag and drop a .zip file here or click</p>
             }
         </div>
     );
 };
 
 export default DropZoneComponent;
-

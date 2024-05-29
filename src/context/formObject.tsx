@@ -14,7 +14,9 @@ export interface Jar {
 }
 
 export interface Population {
-    file: string[];
+    name: string;
+    file: File | null;
+    params: string | number ;
 }
 
 export interface Sbatch {

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Input } from '@/components/ui/input';
 import { useFormContext } from '@/context/formContext';
 import { useTheme } from "@/components/theme-provider";
@@ -7,15 +7,6 @@ const Sbatch = () => {
     const { theme } = useTheme();
     const isDarkMode = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
     const { formObject, setFormObject } = useFormContext();
-
-    useEffect(() => {
-        if (formObject.sbatch.length === 0) {
-            setFormObject((prev) => ({
-                ...prev,
-                sbatch: [{ key: '', value: '' }],
-            }));
-        }
-    }, []);
 
     const handleInputChange = (index: number, key: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
         const newSbatch = [...formObject.sbatch];
