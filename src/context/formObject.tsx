@@ -1,25 +1,27 @@
 export interface FormObject {
-    jar: Jar[]
-    serverPath : string;
-    population : Population;
-    logDir : string;
-    args : string;
-    sbatch : Sbatch[];
+  serverPath: string;
+  sbatch: Sbatch[];
+  population: Population;
+  jvmArgs: string;
+  jar: Jar[];
+  logOptions: string; //todo
 }
 
 export interface Jar {
-    name: string;
-    file: File| null;
-    jvmArgs: string;
+  name: string;
+  file: File | null;
+  defaultArgs: string;
+  multiValueArgs: Array<{ paramName: string; values: string[] }>;
 }
 
 export interface Population {
-    name: string;
-    file: File | null;
-    params: string | number ;
+  name: string;
+  file: File | null;
+  params: string | number;
+  grepFilter: string;
 }
 
 export interface Sbatch {
-    key: string;
-    value: string;
+  key: string;
+  value: string;
 }
