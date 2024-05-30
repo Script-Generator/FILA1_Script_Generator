@@ -1,30 +1,25 @@
 import CodeMirror from '@uiw/react-codemirror';
-import { StreamLanguage } from '@codemirror/language';
-import { shell } from '@codemirror/legacy-modes/mode/shell';
-import { useState, useCallback, useEffect } from 'react';
-import { Button } from '@/components/ui/button.tsx';
-import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
-import { useTheme } from '@/components/theme-provider';
-
-import { ScriptBuilder } from '@/utils/scriptBuilder';
-import { useFormContext } from '@/context/formContext';
+import {StreamLanguage} from '@codemirror/language';
+import {shell} from '@codemirror/legacy-modes/mode/shell';
+import {useState, useCallback} from 'react';
+import {githubDark, githubLight} from '@uiw/codemirror-theme-github';
+import {useTheme} from '@/components/theme-provider';
+import ZipGeneratorComponent from "@/context/zipGenerator.tsx";
+import {useFormContext} from "@/context/formContext.tsx";
+import {ScriptBuilder} from "@/utils/scriptBuilder.ts";
 
 const CodeEditor = () => {
-  const { theme } = useTheme();
-  const isDarkMode =
-    theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const {theme} = useTheme();
+    const isDarkMode =
+        theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    const {formObject} = useFormContext();
 
-  const { formObject } = useFormContext();
-  const [value, setValue] = useState('');
+    const [value, setValue] = useState(new ScriptBuilder(formObject).export());
 
-  useEffect(() => {
-    const newValue = new ScriptBuilder(formObject).export();
-    setValue(newValue);
-  }, [formObject]);
-
-  const onChange = useCallback((codeEditorValue: string) => {
-    console.log('code editor:', codeEditorValue);
-  }, []);
+    // TODO Sprint 2
+    const onChange = useCallback((codeEditorValue: string) => {
+        setValue(codeEditorValue);
+    }, []);
 
   return (
     <div className="p-4 flex flex-col w-full">
@@ -39,9 +34,7 @@ const CodeEditor = () => {
           tabSize: 4,
         }}
       />
-      <div className="mt-4 p-8 absolute bottom-0 right-0">
-        <Button className="">Export</Button>
-      </div>
+        <ZipGeneratorComponent codeEditorValue={value} />
     </div>
   );
 };
