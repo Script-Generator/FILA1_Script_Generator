@@ -6,6 +6,7 @@ export class ScriptBuilder {
 
   constructor(formData: FormObject) {
     this.formData = formData;
+    console.log(this.formData);
   }
 
   private isEmpty(value: unknown): boolean {
@@ -14,12 +15,10 @@ export class ScriptBuilder {
     }
     if (Array.isArray(value)) {
       if (value.length === 1) {
-        if (
-          typeof value[0] === 'object' &&
-          value[0] !== null &&
-          'key' in value[0] &&
-          (value[0] as { key: string }).key === ''
-        ) {
+        if (typeof value[0] === 'object' && value[0] !== null && 'key' in value[0] && value[0].key === '') {
+          return true;
+        }
+        if (typeof value[0] === 'object' && value[0] !== null && 'file' in value[0] && value[0].file === null) {
           return true;
         }
       }
@@ -86,38 +85,71 @@ export class ScriptBuilder {
     return 'JVMARGS="' + this.formData.jvmArgs + '"';
   }
 
-  // private writeArgs(): string {
-  //   if (this.isEmpty(this.formData.args)) {
-  //     return '#ARGS= no ARGS informed';
-  //   }
-  //   return 'ARGS="' + this.formData.args + '"';
+  private checkIndex(value: number): string {
+    if (value === 0) {
+      return '';
+    }
+    return value.toString();
+  }
+
+  // private prepareMultipleValueParam(){
+
   // }
-  // private writeOptions(): string {
-  //   if (this.isEmpty(this.formData.options)) {
-  //     return '#declare -A OPTIONS= no OPTIONS informed';
-  //   }
-  //   return 'declare -A OPTIONS=' + this.formData.options;
-  // }
+
+  private writeLoopConfig(): string {
+    let res = '';
+    let cpt = 0;
+
+    if (this.isEmpty(this.formData.jar)) {
+      return '#$JARFILE= no .jar file informed\n#$ARGS=  ...\n#$declare -A VARIABLE_ARG=  ...\n';
+    }
+
+    this.formData.jar.forEach((jar) => {
+      res +=
+        '$JARFILE' +
+        this.checkIndex(cpt) +
+        '=' +
+        this.formData.serverPath +
+        TreeStructureEnum.JAR +
+        '/' +
+        jar.name +
+        '\n';
+      res += '$ARGS' + +this.checkIndex(cpt) + '="' + jar.defaultArgs + '"\n';
+      if (jar.multiValueArgs.length !== 0) {
+        res += '$declare -A VARIABLE_ARG' + this.checkIndex(cpt) + '="' + ' TODO"\n';
+      }
+      cpt++;
+    });
+    return res;
+  }
 
   private writeLoops(): string {
     let loop = 'for file in $FILES\ndo\n';
-    loop += '  #if grep -q "satisfy" $file; then\n';
-    loop += '    echo "Processing $file file..."\n';
-    loop += '    for opt in ${!OPTIONS[@]}\n';
-    loop += '    do\n';
-    loop += '      name="$(basename -- $file)"\n';
-    loop +=
-      '          srun -n1 -N1 java $JVMARGS -jar $JARFILE $file ${OPTIONS[$opt]} $ARGS > $LOGDIR/${name%%.*}.$opt.out &\n';
-    loop += '    done\n';
 
-    loop += '  #fi\n';
+    if (this.isEmpty(this.formData.population.grepFilter)) {
+      loop += '  #if grep -q "' + this.formData.population.grepFilter + '" $file; then\n';
+    } else {
+      loop += '  if grep -q "' + this.formData.population.grepFilter + '" $file; then\n';
+    }
+
+    loop += '    echo "Processing $file file..."\n';
+
+    this.formData.jar.forEach(() => {
+      loop += '    for opt in ${!OPTIONS[@]}\n';
+      loop += '    do\n';
+      loop += '      name="$(basename -- $file)"\n';
+      loop +=
+        '          srun -n1 -N1 java $JVMARGS -jar $JARFILE $file ${OPTIONS[$opt]} $ARGS > $LOGDIR/${name%%.*}.$opt.out &\n';
+      loop += '    done\n';
+    });
+
+    if (this.isEmpty(this.formData.population.grepFilter)) {
+      loop += '  #fi\n';
+    } else {
+      loop += '  fi\n';
+    }
     return loop + 'done';
   }
-
-  //
-  //
-  //
-  //
 
   private writeWait(): string {
     return 'wait';
@@ -139,10 +171,8 @@ export class ScriptBuilder {
       this.writeFiles(),
       this.writeLogs(),
       this.writeJVMArgs(),
-      //this.writeArgs(),
-      //this.spacer(),
-      //this.writeOptions(),
       this.spacer(),
+      this.writeLoopConfig(),
       this.writeLoops(),
       this.spacer(),
       this.writeWait(),
