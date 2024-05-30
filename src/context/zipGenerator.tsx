@@ -1,34 +1,49 @@
 import React from 'react';
 import JSZip from 'jszip';
-<<<<<<< HEAD
-import {Button} from '@/components/ui/button';
-import {TreeStructureEnum} from "@/utils/TreeStructureEnum.ts";
-import {useFormContext} from "@/context/formContext.tsx";
-=======
 import { Button } from '@/components/ui/button';
 import {TreeStructureEnum} from "@/utils/TreeStructureEnum.ts";
->>>>>>> 08277ae (@dev:Ajout de l'export du script dans un zip)
+import {useFormContext} from "@/context/formContext.tsx";
 
 interface ZipGeneratorComponentProps {
     codeEditorValue: string;
 }
 
-<<<<<<< HEAD
-const {formObject} = useFormContext();
-=======
->>>>>>> 08277ae (@dev:Ajout de l'export du script dans un zip)
-const ZipGeneratorComponent: React.FC<ZipGeneratorComponentProps> = ({ codeEditorValue }) => {
+const ZipGeneratorComponent: React.FC<ZipGeneratorComponentProps> = ({codeEditorValue}) => {
+    const {formObject} = useFormContext();
 
-    const handleDownloadClick = () => {
+    const handleDownloadClick = async () => {
         const zip = new JSZip();
 
-<<<<<<< HEAD
         const instancesFolder = zip.folder(TreeStructureEnum.INSTANCES);
 
-        if (instancesFolder) {
-            if (instancesFolder) {
-                formObject.population.file && instancesFolder.file(formObject.population.file.name, formObject.population.file);
-            }
+        if (instancesFolder && formObject.population.file) {
+            const populationFile = formObject.population.file;
+            const arrayBuffer = await new Promise<ArrayBuffer>((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const result = event.target?.result;
+                    if (result) {
+                        resolve(result as ArrayBuffer);
+                    } else {
+                        reject(new Error('Failed to read file.'));
+                    }
+                };
+                reader.onerror = () => reject(new Error('Failed to read file.'));
+                reader.readAsArrayBuffer(populationFile);
+            });
+
+            const inputZip = await JSZip.loadAsync(arrayBuffer);
+            const filePromises = Object.keys(inputZip.files).map((filename) => {
+                return inputZip.files[filename].async('blob').then((fileData) => {
+                    // Remove any directory structure from filename
+                    const cleanFilename = filename.split('/').pop();
+                    if (cleanFilename) {
+                        instancesFolder.file(cleanFilename, fileData); // Put file directly into instancesFolder
+                    }
+                });
+            });
+
+            await Promise.all(filePromises);
         }
 
         const jarFolder = zip.folder(TreeStructureEnum.JAR);
@@ -40,24 +55,9 @@ const ZipGeneratorComponent: React.FC<ZipGeneratorComponentProps> = ({ codeEdito
             });
         }
 
-        const logsFolder = zip.folder(TreeStructureEnum.LOGS);
-        if (logsFolder) {
-            logsFolder.file(formObject.logOptions, formObject.logOptions);
-        }
-
+        zip.folder(TreeStructureEnum.LOGS);
         zip.file('script.sh', codeEditorValue);
         zip.generateAsync({type: 'blob'}).then((content) => {
-=======
-        for (const key in TreeStructureEnum) {
-            if (Object.prototype.hasOwnProperty.call(TreeStructureEnum, key)) {
-                const folderName = TreeStructureEnum[key as keyof typeof TreeStructureEnum];
-                zip.folder(folderName);
-            }
-        }
-
-        zip.file('script.sh', codeEditorValue);
-        zip.generateAsync({ type: 'blob' }).then((content) => {
->>>>>>> 08277ae (@dev:Ajout de l'export du script dans un zip)
             const a = document.createElement('a');
             const url = URL.createObjectURL(content);
             a.href = url;
