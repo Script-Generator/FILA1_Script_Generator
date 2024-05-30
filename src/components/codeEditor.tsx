@@ -1,14 +1,14 @@
 import CodeMirror from '@uiw/react-codemirror';
 import { StreamLanguage } from '@codemirror/language';
 import { shell } from '@codemirror/legacy-modes/mode/shell';
-import { useState, useCallback, useEffect } from 'react';
-import { Button } from '@/components/ui/button.tsx';
+import {useState, useCallback, useEffect} from 'react';
 import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
 import { useTheme } from '@/components/theme-provider';
 
 import { ScriptBuilder } from '@/utils/scriptBuilder';
 import { useFormContext } from '@/context/formContext';
 
+import ZipGeneratorComponent from "@/context/zipGenerator.tsx";
 const CodeEditor = () => {
   const { theme } = useTheme();
   const isDarkMode =
@@ -39,9 +39,8 @@ const CodeEditor = () => {
           tabSize: 4,
         }}
       />
-      <div className="mt-4 p-8 absolute bottom-0 right-0">
-        <Button className="">Export</Button>
-      </div>
+        {/* Give the value to the ZipGeneratorComponent */}
+        <ZipGeneratorComponent codeEditorValue={value} />
     </div>
   );
 };
