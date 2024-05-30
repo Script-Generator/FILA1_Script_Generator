@@ -19,7 +19,6 @@ const CodeEditor = () => {
 
   useEffect(() => {
     const newValue = new ScriptBuilder(formObject).export();
-    console.log(newValue);
     setValue(newValue);
   }, [formObject]);
 
