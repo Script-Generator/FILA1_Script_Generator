@@ -26,6 +26,11 @@ const Population = () => {
     }));
   };
 
+  const handleGrepFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    setFormObject((prev) => ({ ...prev, population: { ...prev.population, grepFilter: newValue } }));
+  };
+
   const handleFileUpload = (uploadedFile: File) => {
     setFiles([uploadedFile]);
     setFormObject((prev) => ({ ...prev, population: { ...prev.population, file: uploadedFile } }));
@@ -108,6 +113,18 @@ const Population = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <div>
+        {' '}
+        <p>Grep Filter for files</p>
+        <Input
+          type="text"
+          placeholder="string that will be check in each file"
+          className="mt-2"
+          value={formObject.population.grepFilter}
+          onChange={handleGrepFilter}
+        />
+      </div>
     </>
   );
 };
