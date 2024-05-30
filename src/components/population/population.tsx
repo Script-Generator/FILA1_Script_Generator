@@ -15,7 +15,6 @@ const Population = () => {
   const handleParamsInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     const parsedValue = parseInt(newValue, 10);
-    console.log(parsedValue);
 
     setFormObject((prev) => ({
       ...prev,
