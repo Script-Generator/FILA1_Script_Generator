@@ -6,7 +6,6 @@ export class ScriptBuilder {
 
   constructor(formData: FormObject) {
     this.formData = formData;
-    console.log(this.formData);
   }
 
   private isEmpty(value: unknown): boolean {
@@ -91,10 +90,6 @@ export class ScriptBuilder {
     }
     return value.toString();
   }
-
-  // private prepareMultipleValueParam(){
-
-  // }
 
   private writeLoopConfig(): string {
     let res = '';

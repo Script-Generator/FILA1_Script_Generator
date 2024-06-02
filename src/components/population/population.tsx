@@ -68,12 +68,6 @@ const Population = () => {
         </Label>
       )}
 
-      <DropZoneComponent
-        onFileUpload={handleFileUpload}
-        allowedExtension={FileFormatEnum.ZIP}
-        onNameUpdate={handleNameUpdate}
-      />
-
       <Tabs defaultValue="all" className="flex-col">
         <TabsList className="flex w-full">
           <TabsTrigger value="all" className="flex">
