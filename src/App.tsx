@@ -9,11 +9,11 @@ import { FormProvider } from './context/formContext';
 function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <div className="h-screen flex flex-col mb-10">
+      <div className="h-screen flex flex-col ">
         <Header />
         <FormProvider>
           <div className="flex flex-1 overflow-hidden">
-            <ResizablePanelGroup direction="horizontal" className="flex-1 flex">
+            <ResizablePanelGroup direction="horizontal" className="flex-1 flex overflow-hidden">
               <ResizablePanel defaultSize={55} className="flex flex-1 min-w-96 !overflow-scroll">
                 <FormParams />
               </ResizablePanel>

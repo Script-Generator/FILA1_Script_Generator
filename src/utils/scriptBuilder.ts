@@ -98,7 +98,7 @@ export class ScriptBuilder {
 
   private writeLoopConfig(): string {
     let res = '';
-    let cpt = 0;
+    let cpt = 1;
 
     if (this.isEmpty(this.formData.jar)) {
       return '#$JARFILE= no .jar file informed\n#$ARGS=  ...\n#$declare -A VARIABLE_ARG=  ...\n';
@@ -114,10 +114,20 @@ export class ScriptBuilder {
         '/' +
         jar.name +
         '\n';
-      res += '$ARGS' + +this.checkIndex(cpt) + '="' + jar.defaultArgs + '"\n';
+      res += '$ARGS' + this.checkIndex(cpt) + '="' + jar.defaultArgs + '"\n';
       if (jar.multiValueArgs.length !== 0) {
-        res += '$declare -A VARIABLE_ARG' + this.checkIndex(cpt) + '="' + ' TODO"\n';
+        res += '$declare -A VARIABLE_ARG' + this.checkIndex(cpt) + '=(';
+
+        jar.multiValueArgs.forEach((value) => {
+          const values = value.values;
+          values.forEach((val) => {
+            res += '[' + val + ']="-' + value.paramName + ' ' + val + '" ';
+          });
+        });
+
+        res += ')\n';
       }
+      res += '\n';
       cpt++;
     });
     return res;
@@ -132,15 +142,47 @@ export class ScriptBuilder {
       loop += '  if grep -q "' + this.formData.population.grepFilter + '" $file; then\n';
     }
 
+    loop += '\n';
     loop += '    echo "Processing $file file..."\n';
+    loop += '    name="$(basename -- $file)"\n';
+    loop += '\n';
 
-    this.formData.jar.forEach(() => {
-      loop += '    for opt in ${!OPTIONS[@]}\n';
-      loop += '    do\n';
-      loop += '      name="$(basename -- $file)"\n';
-      loop +=
-        '          srun -n1 -N1 java $JVMARGS -jar $JARFILE $file ${OPTIONS[$opt]} $ARGS > $LOGDIR/${name%%.*}.$opt.out &\n';
-      loop += '    done\n';
+    let cpt = 1;
+    this.formData.jar.forEach((jarFile) => {
+      if (jarFile.multiValueArgs.length !== 0) {
+        loop += '    for option in ${!VARIABLE_ARG' + this.checkIndex(cpt) + '[@]}\n';
+        loop += '    do\n';
+      }
+
+      //TODO NAMING OF LOG FILES + LOG OPTIONS
+
+      if (jarFile.multiValueArgs.length !== 0) {
+        loop +=
+          '      srun -n1 -N1 java $JVMARGS -jar $JARFILE' +
+          this.checkIndex(cpt) +
+          ' $file ${VARIABLE_ARG' +
+          this.checkIndex(cpt) +
+          '[$option]} $ARGS' +
+          this.checkIndex(cpt) +
+          ' > $LOGDIR/${name%%.*}' +
+          this.checkIndex(cpt) +
+          '.$option.out &\n';
+      } else {
+        loop +=
+          '    srun -n1 -N1 java $JVMARGS -jar $JARFILE' +
+          this.checkIndex(cpt) +
+          ' $file $ARGS' +
+          this.checkIndex(cpt) +
+          ' > $LOGDIR/${name%%.*}' +
+          this.checkIndex(cpt) +
+          '.$option.out &\n';
+      }
+
+      if (jarFile.multiValueArgs.length !== 0) {
+        loop += '    done\n';
+      }
+      loop += '\n';
+      cpt++;
     });
 
     if (this.isEmpty(this.formData.population.grepFilter)) {
