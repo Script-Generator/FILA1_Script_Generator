@@ -8,6 +8,7 @@ import { ScriptBuilder } from '@/utils/scriptBuilder.ts';
 import { githubDark, githubLight } from '@uiw/codemirror-theme-github';
 import ZipGeneratorComponent from '@/context/zipGenerator';
 
+
 const CodeEditor = () => {
   const { theme } = useTheme();
   const { formObject } = useFormContext();
