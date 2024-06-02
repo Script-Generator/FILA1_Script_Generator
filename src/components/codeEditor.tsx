@@ -33,7 +33,7 @@ const CodeEditor = () => {
       />
       {/* 
       Assuming ZipGeneratorComponent accepts a prop named codeEditorValue, 
-      pass the updated value to it 
+      pass the updated value to it
       */}
       <ZipGeneratorComponent codeEditorValue={value} />
     </div>
