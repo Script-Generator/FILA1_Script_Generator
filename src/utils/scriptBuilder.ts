@@ -52,22 +52,15 @@ export class ScriptBuilder {
       return '#FILES= no .zip file informed';
     }
 
-    if (this.formData.population.params !== '') {
+    let filesCmd = 'FILES=' + this.formData.serverPath + TreeStructureEnum.INSTANCES + '/*';
+    if (this.formData.population.params) {
       if (typeof this.formData.population.params === 'number') {
-        return (
-          'FILES=' +
-          this.formData.serverPath +
-          TreeStructureEnum.INSTANCES +
-          '/* | shuffle | head -' +
-          this.formData.population.params
-        );
+        filesCmd += ' | shuffle | head -' + this.formData.population.params;
+      } else {
+        filesCmd += ' | ' + this.formData.population.params;
       }
-      return (
-        'FILES=' + this.formData.serverPath + TreeStructureEnum.INSTANCES + '/* | ' + this.formData.population.params
-      );
-    } else {
-      return 'FILES=' + this.formData.serverPath + TreeStructureEnum.INSTANCES + '/*';
     }
+    return filesCmd;
   }
 
   private writeLogs(): string {
@@ -111,7 +104,7 @@ export class ScriptBuilder {
         '\n';
       res += '$ARGS' + this.checkIndex(cpt) + '="' + jar.defaultArgs + '"\n';
       if (jar.multiValueArgs.length !== 0) {
-        res += '$declare -A VARIABLE_ARG' + this.checkIndex(cpt) + '=(';
+        res += 'declare -A VARIABLE_ARG' + this.checkIndex(cpt) + '=(';
 
         jar.multiValueArgs.forEach((value) => {
           const values = value.values;
@@ -149,8 +142,6 @@ export class ScriptBuilder {
         loop += '    do\n';
       }
 
-      //TODO NAMING OF LOG FILES + LOG OPTIONS
-
       if (jarFile.multiValueArgs.length !== 0) {
         loop +=
           '      srun -n1 -N1 java $JVMARGS -jar $JARFILE' +
@@ -170,7 +161,7 @@ export class ScriptBuilder {
           this.checkIndex(cpt) +
           ' > $LOGDIR/${name%%.*}' +
           this.checkIndex(cpt) +
-          '.$option.out &\n';
+          '.out &\n';
       }
 
       if (jarFile.multiValueArgs.length !== 0) {
@@ -193,11 +184,32 @@ export class ScriptBuilder {
   }
 
   private writeZip(): string {
-    // static ?
     return 'zip -jr $SLURM_JOB_NAME-$SLURM_JOB_ID.zip $LOGDIR';
   }
 
-  public export(): string {
+  private generateCommandList(): string {
+    let commandList = '';
+
+    let cpt = 1;
+    this.formData.jar.forEach((jarFile) => {
+      if (jarFile.multiValueArgs.length !== 0) {
+        commandList += `# Commands for ${jarFile.name}\n`;
+        jarFile.multiValueArgs.forEach((arg) => {
+          arg.values.forEach((val) => {
+            commandList += `srun -n1 -N1 java $JVMARGS -jar $JARFILE${this.checkIndex(cpt)} $file -${arg.paramName} ${val} $ARGS${this.checkIndex(cpt)} > $LOGDIR/\${name%%.*}${this.checkIndex(cpt)}.${val}.out\n`;
+          });
+        });
+      } else {
+        commandList += `srun -n1 -N1 java $JVMARGS -jar $JARFILE${this.checkIndex(cpt)} $file $ARGS${this.checkIndex(cpt)} > $LOGDIR/\${name%%.*}${this.checkIndex(cpt)}.out\n`;
+      }
+      commandList += '\n';
+      cpt++;
+    });
+
+    return commandList.trim();
+  }
+
+  public export(): { bashScript: string; commandList: string } {
     const scriptParts: string[] = [
       this.writeHeaders(),
       this.spacer(),
@@ -216,6 +228,9 @@ export class ScriptBuilder {
       this.writeZip(),
     ];
 
-    return scriptParts.join('\n');
+    const bashScript = scriptParts.join('\n');
+    const commandList = this.generateCommandList();
+
+    return { bashScript, commandList };
   }
 }

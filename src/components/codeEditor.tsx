@@ -13,19 +13,38 @@ const CodeEditor = () => {
   const { formObject } = useFormContext();
   const isDarkMode =
     theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  const [value, setValue] = useState(new ScriptBuilder(formObject).export());
 
+  const [value, setValue] = useState(new ScriptBuilder(formObject).export().bashScript);
   useEffect(() => {
-    setValue(new ScriptBuilder(formObject).export());
+    setValue(new ScriptBuilder(formObject).export().bashScript);
+  }, [formObject]);
+
+  const [value2, setValue2] = useState(new ScriptBuilder(formObject).export().commandList);
+  useEffect(() => {
+    setValue2(new ScriptBuilder(formObject).export().commandList);
   }, [formObject]);
 
   return (
-    <div className="p-4 flex flex-col w-full">
+    <div className="p-4 flex flex-col w-full overflow-scroll">
+      <h1 className="text-x2 font-bold p-1">Script :</h1>
       <CodeMirror
-        className="text-left flex-grow overflow-scroll"
+        className="text-left overflow-scroll mb-4"
         value={value}
         extensions={[StreamLanguage.define(shell)]}
         theme={isDarkMode ? githubDark : githubLight}
+        basicSetup={{
+          lineNumbers: true,
+          tabSize: 4,
+        }}
+      />
+      <h1 className="text-x2 font-bold p-1">Command list :</h1>
+      <CodeMirror
+        className="text-left overflow-scroll mb-8"
+        value={value2}
+        extensions={[StreamLanguage.define(shell)]}
+        theme={isDarkMode ? githubDark : githubLight}
+        readOnly={true}
+        editable={false}
         basicSetup={{
           lineNumbers: true,
           tabSize: 4,
