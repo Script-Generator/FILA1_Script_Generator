@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { useFormContext } from '@/context/formContext';
 import { useTheme } from "@/components/theme-provider";
@@ -10,15 +10,36 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select.tsx';
+import { RegexEnum } from '@/utils/regexEnum.ts';
+
+const regex: RegExp = new RegExp(RegexEnum.ALPHANUMERIC);
 
 const Sbatch = () => {
     const { theme } = useTheme();
     const isDarkMode = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    const { formObject, setFormObject } = useFormContext();
+    const { formObject, setFormObject, setFormValid, isFormValid } = useFormContext();
+    const [error, setError] = useState<string | null>(null);
 
     const handleInputChange = (index: number, key: string) => (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const newSbatch = [...formObject.sbatch];
         newSbatch[index] = { ...newSbatch[index], [key]: event.target.value };
+        if (regex.test(newSbatch[index].value) && isFormValid) {
+            setError(null);
+            setFormValid(true);
+        } else {
+            setError('Invalid value format (required: alphanumeric)');
+            let valid = true;
+            for (let i = 0; i < newSbatch.length; i++) {
+                if (!regex.test(newSbatch[i].value)) {
+                    valid = false;
+                    break;
+                }
+            }
+            if (valid) {
+                setError(null);
+            }
+            setFormValid(valid);
+        }
         setFormObject((prev) => ({ ...prev, sbatch: newSbatch }));
     };
 
@@ -105,10 +126,12 @@ const Sbatch = () => {
                   placeholder="Value"
                   value={item.value}
                   onChange={handleInputChange(index, 'value')}
+                  className={error && !regex.test(item.value)? 'border-red-500' : ''}
                 />
                 {renderRemoveButton(index)}
             </div>
           ))}
+          {error && <p className="text-red-500 mt-0 ml-1">{error}</p>}
           <button
             onClick={addNewSbatchInput}
             className={`px-4 py-2 rounded ${isDarkMode ? 'bg-blackBleu text-white' : 'bg-secondaryGray text-black'}`}
