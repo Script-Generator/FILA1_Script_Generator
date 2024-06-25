@@ -7,15 +7,28 @@ import DropZoneComponent from '@/components/population/dropzoneComponent.tsx';
 import { useFormContext } from '@/context/formContext.tsx';
 import TagComponent from '@/components/population/tagComponent.tsx';
 import { FileFormatEnum } from '@/utils/fileFormatEnum.ts';
+import { RegexEnum } from '@/utils/regexEnum.ts';
+
+const regexInt: RegExp = new RegExp(RegexEnum.INTEGER);
+const regexAlphanum: RegExp = new RegExp(RegexEnum.ALPHANUMERIC);
 
 const Population = () => {
-  const { formObject, setFormObject } = useFormContext();
+  const { formObject, setFormObject, setFormValid } = useFormContext();
+  const [errorInt, setErrorInt] = useState<string | null>(null);
+  const [errorGrep, setErrorGrep] = useState<string | null>(null);
   const [files, setFiles] = useState<File[]>([]);
 
   const handleParamsInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     const parsedValue = parseInt(newValue, 10);
 
+    if (regexInt.test(newValue)) {
+      setErrorInt(null);
+      setFormValid(true);
+    } else {
+      setErrorInt('Invalid value format (required: integer)');
+      setFormValid(false);
+    }
     setFormObject((prev) => ({
       ...prev,
       population: {
@@ -27,6 +40,13 @@ const Population = () => {
 
   const handleGrepFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
+    if (regexAlphanum.test(newValue)) {
+      setErrorGrep(null);
+      setFormValid(true);
+    } else {
+      setErrorGrep('Invalid value format (required: alphanumeric)');
+      setFormValid(false);
+    }
     setFormObject((prev) => ({ ...prev, population: { ...prev.population, grepFilter: newValue } }));
   };
 
@@ -95,7 +115,12 @@ const Population = () => {
             <CardContent className="space-y-2">
               <div className="space-y-1">
                 <CardDescription>Choose the number of random files</CardDescription>
-                <Input value={formObject.population.params} onChange={handleParamsInputChange} id="numberFile" />
+                <Input
+                  value={formObject.population.params}
+                  onChange={handleParamsInputChange}
+                  className={errorInt ? 'border-red-500' : ''}
+                  id="numberFile" />
+                {errorInt && <p className="text-red-500 mt-1">{errorInt}</p>}
               </div>
             </CardContent>
           </Card>
@@ -121,10 +146,11 @@ const Population = () => {
         <Input
           type="text"
           placeholder="string that will be check in each file"
-          className="mt-2"
           value={formObject.population.grepFilter}
           onChange={handleGrepFilter}
+          className={errorGrep ? 'border-red-500 mt-2' : 'mt-2'}
         />
+        {errorGrep && <p className="text-red-500 mt-1">{errorGrep}</p>}
       </div>
     </>
   );

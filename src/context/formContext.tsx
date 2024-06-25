@@ -4,6 +4,8 @@ import { FormObject } from '@/context/formObject.tsx';
 interface FormContextProps {
   formObject: FormObject;
   setFormObject: React.Dispatch<React.SetStateAction<FormObject>>;
+  isFormValid: boolean;
+  setFormValid: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const FormContext = createContext<FormContextProps | undefined>(undefined);
@@ -25,6 +27,11 @@ export const FormProvider = ({ children }: { children: ReactNode }) => {
     jar: [{ name: '', file: null, defaultArgs: '', multiValueArgs: [] }],
     logOptions: '',
   });
+  const [isFormValid, setFormValid] = useState<boolean>(true);
 
-  return <FormContext.Provider value={{ formObject, setFormObject }}>{children}</FormContext.Provider>;
+  return (
+    <FormContext.Provider value={{ formObject, setFormObject, isFormValid, setFormValid }}>
+      {children}
+    </FormContext.Provider>
+  );
 };

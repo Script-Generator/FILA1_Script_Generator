@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import JSZip from 'jszip';
 import { Button } from '@/components/ui/button';
 import { TreeStructureEnum } from "@/utils/TreeStructureEnum.ts";
@@ -9,9 +9,17 @@ interface ZipGeneratorComponentProps {
 }
 
 const ZipGeneratorComponent: React.FC<ZipGeneratorComponentProps> = ({ codeEditorValue }) => {
-    const { formObject } = useFormContext();
+    const { formObject, isFormValid } = useFormContext();
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
 
     const handleDownloadClick = async () => {
+        if (!isFormValid) {
+            setErrorMessage('Some fields are invalid or empty. Please correct them before exporting.');
+            return;
+        } else {
+            setErrorMessage(null);
+        }
         const zip = new JSZip();
 
         const instancesFolder = zip.folder(TreeStructureEnum.INSTANCES);
@@ -80,10 +88,13 @@ const ZipGeneratorComponent: React.FC<ZipGeneratorComponentProps> = ({ codeEdito
     };
 
     return (
-      <div className="mt-4 p-8 absolute bottom-0 right-0">
-          <Button onClick={handleDownloadClick}>Export</Button>
+      <div>
+          {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+          <div className="flex mt-4 p-8 justify-end">
+              <Button onClick={handleDownloadClick}>Export</Button>
+          </div>
       </div>
-    );
+);
 };
 
 export default ZipGeneratorComponent;
