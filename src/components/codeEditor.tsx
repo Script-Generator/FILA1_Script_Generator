@@ -39,7 +39,7 @@ const CodeEditor = () => {
       />
       <h1 className="text-x2 font-bold p-1">Command list :</h1>
       <CodeMirror
-        className="text-left overflow-scroll mb-8"
+        className="text-left overflow-scroll mb-8 min-h-20"
         value={value2}
         extensions={[StreamLanguage.define(shell)]}
         theme={isDarkMode ? githubDark : githubLight}
@@ -50,11 +50,7 @@ const CodeEditor = () => {
           tabSize: 4,
         }}
       />
-      {/* 
-      Assuming ZipGeneratorComponent accepts a prop named codeEditorValue, 
-      pass the updated value to it
-      */}
-      <ZipGeneratorComponent codeEditorValue={value} />
+      <ZipGeneratorComponent codeEditorValue={value} javaCommandValue={value2} />
     </div>
   );
 };

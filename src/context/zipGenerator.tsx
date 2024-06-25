@@ -6,9 +6,10 @@ import { useFormContext } from '@/context/formContext.tsx';
 
 interface ZipGeneratorComponentProps {
   codeEditorValue: string;
+  javaCommandValue: string;
 }
 
-const ZipGeneratorComponent: React.FC<ZipGeneratorComponentProps> = ({ codeEditorValue }) => {
+const ZipGeneratorComponent: React.FC<ZipGeneratorComponentProps> = ({ codeEditorValue, javaCommandValue }) => {
   const { formObject } = useFormContext();
 
   const handleDownloadClick = async () => {
@@ -35,10 +36,9 @@ const ZipGeneratorComponent: React.FC<ZipGeneratorComponentProps> = ({ codeEdito
       const inputZip = await JSZip.loadAsync(arrayBuffer);
       const filePromises = Object.keys(inputZip.files).map((filename) => {
         return inputZip.files[filename].async('blob').then((fileData) => {
-          // Remove any directory structure from filename
           const cleanFilename = filename.split('/').pop();
           if (cleanFilename) {
-            instancesFolder.file(cleanFilename, fileData); // Put file directly into instancesFolder
+            instancesFolder.file(cleanFilename, fileData);
           }
         });
       });
@@ -56,6 +56,7 @@ const ZipGeneratorComponent: React.FC<ZipGeneratorComponentProps> = ({ codeEdito
     }
 
     zip.folder(TreeStructureEnum.LOGS);
+    zip.file('commandLines.txt', javaCommandValue);
     zip.file('script.sh', codeEditorValue);
     zip.generateAsync({ type: 'blob' }).then((content) => {
       const a = document.createElement('a');
@@ -70,7 +71,7 @@ const ZipGeneratorComponent: React.FC<ZipGeneratorComponentProps> = ({ codeEdito
   };
 
   return (
-    <div className="mt-4 p-8 absolute bottom-0 right-0">
+    <div className="mt-2 p-4 absolute bottom-0 right-0">
       <Button onClick={handleDownloadClick}>Export</Button>
     </div>
   );

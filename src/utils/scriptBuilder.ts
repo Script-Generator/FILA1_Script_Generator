@@ -70,6 +70,13 @@ export class ScriptBuilder {
     return 'LOGDIR=' + this.formData.serverPath + TreeStructureEnum.LOGS + '/';
   }
 
+  private writeJavaLinesPath(): string {
+    if (this.isEmpty(this.formData.serverPath)) {
+      return '#JAVACOMMAND= no server path informed';
+    }
+    return 'JAVACOMMAND=' + this.formData.serverPath + TreeStructureEnum.LOGS + '/';
+  }
+
   private writeJVMArgs(): string {
     if (this.isEmpty(this.formData.jvmArgs)) {
       return '#JVMARGS= no JVMARGS informed';
@@ -184,7 +191,7 @@ export class ScriptBuilder {
   }
 
   private writeZip(): string {
-    return 'zip -jr $SLURM_JOB_NAME-$SLURM_JOB_ID.zip $LOGDIR';
+    return 'zip -jr $SLURM_JOB_NAME-$SLURM_JOB_ID.zip $LOGDIR ??';
   }
 
   private generateCommandList(): string {
@@ -219,6 +226,7 @@ export class ScriptBuilder {
       this.spacer(),
       this.writeFiles(),
       this.writeLogs(),
+      this.writeJavaLinesPath(),
       this.writeJVMArgs(),
       this.spacer(),
       this.writeLoopConfig(),
