@@ -61,6 +61,7 @@ const ZipGeneratorComponent: React.FC<ZipGeneratorComponentProps> = ({ codeEdito
 
         const formData = new FormData();
         formData.append('file', content, 'script.zip');
+        formData.append('serverPath', formObject.serverPath);
 
         try {
             const response = await fetch('http://localhost:5001/upload', {

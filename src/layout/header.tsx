@@ -19,6 +19,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useTheme } from '@/components/theme-provider';
+import { Link } from 'react-router-dom';
 
 export function ModeToggle() {
   const { setTheme } = useTheme();
@@ -45,7 +46,7 @@ function refreshPage() {
   location.reload();
 }
 
-function refreshPageButton() {
+function RefreshPageButton() {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -75,18 +76,23 @@ const Header = () => {
     <header className="top-0 left-0 right-0 p-4 shadow-sm bg-inherit sticky z-10 border-b">
       <div className="mx-auto flex justify-between">
         <div className="flex items-center gap-6">
-          <a href="/">
+          <Link to="/">
             <h1 className="text-2xl font-bold text-start">Script Generator</h1>
-          </a>
+          </Link>
           <Button variant="ghost">
             <a href="https://github.com/Script-Generator/FILA1_Script_Generator#readme">
               <p>Documentation</p>
             </a>
           </Button>
+          <Button variant="ghost">
+            <Link to="/visualisation">
+              <p>Visualisation</p>
+            </Link>
+          </Button>
         </div>
         <div className="flex items-center gap-4">
-          {refreshPageButton()}
-          {ModeToggle()}
+          <RefreshPageButton />
+          <ModeToggle />
         </div>
       </div>
     </header>
