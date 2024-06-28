@@ -25,7 +25,7 @@ export const FormProvider = ({ children }: { children: ReactNode }) => {
     population: { name: '', file: null, params: '', grepFilter: '' },
     jvmArgs: '',
     jar: [{ name: '', file: null, defaultArgs: '', multiValueArgs: [] }],
-    logOptions: '',
+    logOptions: false,
   });
   const [isFormValid, setFormValid] = useState<boolean>(true);
 

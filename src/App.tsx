@@ -14,11 +14,11 @@ function App() {
         <FormProvider>
           <div className="flex flex-1 overflow-hidden">
             <ResizablePanelGroup direction="horizontal" className="flex-1 flex overflow-hidden">
-              <ResizablePanel defaultSize={55} className="flex flex-1 min-w-96 !overflow-scroll">
+              <ResizablePanel defaultSize={43} className="flex flex-1 min-w-96 !overflow-scroll">
                 <FormParams />
               </ResizablePanel>
               <ResizableHandle withHandle />
-              <ResizablePanel defaultSize={45} className="flex flex-1 min-w-96">
+              <ResizablePanel defaultSize={57} className="flex flex-1 min-w-96">
                 <CodeEditor />
               </ResizablePanel>
             </ResizablePanelGroup>

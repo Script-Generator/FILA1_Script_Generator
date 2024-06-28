@@ -52,22 +52,15 @@ export class ScriptBuilder {
       return '#FILES= no .zip file informed';
     }
 
-    if (this.formData.population.params !== '') {
+    let filesCmd = 'FILES=' + this.formData.serverPath + TreeStructureEnum.INSTANCES + '/*';
+    if (this.formData.population.params) {
       if (typeof this.formData.population.params === 'number') {
-        return (
-          'FILES=' +
-          this.formData.serverPath +
-          TreeStructureEnum.INSTANCES +
-          '/* | shuffle | head -' +
-          this.formData.population.params
-        );
+        filesCmd += ' | shuffle | head -' + this.formData.population.params;
+      } else {
+        filesCmd += ' | ' + this.formData.population.params;
       }
-      return (
-        'FILES=' + this.formData.serverPath + TreeStructureEnum.INSTANCES + '/* | ' + this.formData.population.params
-      );
-    } else {
-      return 'FILES=' + this.formData.serverPath + TreeStructureEnum.INSTANCES + '/*';
     }
+    return filesCmd;
   }
 
   private writeLogs(): string {
@@ -77,55 +70,27 @@ export class ScriptBuilder {
     return 'LOGDIR=' + this.formData.serverPath + TreeStructureEnum.LOGS + '/';
   }
 
+  private writeJarPath(): string {
+    if (this.isEmpty(this.formData.serverPath)) {
+      return '#JARDIR= no server path informed';
+    }
+    return 'JARDIR=' + this.formData.serverPath + TreeStructureEnum.JAR;
+  }
+
+  private writeJavaLinesPath(): string {
+    if (this.isEmpty(this.formData.serverPath)) {
+      return '#JAVACOMMAND= no server path informed';
+    }
+    return (
+      'JAVACOMMAND=' + this.formData.serverPath + 'commandLines.txt' + '\n' + 'mapfile -t commands < "$JAVACOMMAND"'
+    );
+  }
+
   private writeJVMArgs(): string {
     if (this.isEmpty(this.formData.jvmArgs)) {
       return '#JVMARGS= no JVMARGS informed';
     }
     return 'JVMARGS="' + this.formData.jvmArgs + '"';
-  }
-
-  private checkIndex(value: number): string {
-    if (value === 0) {
-      return '';
-    }
-    return value.toString();
-  }
-
-  private writeLoopConfig(): string {
-    let res = '';
-    let cpt = 1;
-
-    if (this.isEmpty(this.formData.jar)) {
-      return '#$JARFILE= no .jar file informed\n#$ARGS=  ...\n#$declare -A VARIABLE_ARG=  ...\n';
-    }
-
-    this.formData.jar.forEach((jar) => {
-      res +=
-        '$JARFILE' +
-        this.checkIndex(cpt) +
-        '=' +
-        this.formData.serverPath +
-        TreeStructureEnum.JAR +
-        '/' +
-        jar.name +
-        '\n';
-      res += '$ARGS' + this.checkIndex(cpt) + '="' + jar.defaultArgs + '"\n';
-      if (jar.multiValueArgs.length !== 0) {
-        res += '$declare -A VARIABLE_ARG' + this.checkIndex(cpt) + '=(';
-
-        jar.multiValueArgs.forEach((value) => {
-          const values = value.values;
-          values.forEach((val) => {
-            res += '[' + val + ']="-' + value.paramName + ' ' + val + '" ';
-          });
-        });
-
-        res += ')\n';
-      }
-      res += '\n';
-      cpt++;
-    });
-    return res;
   }
 
   private writeLoops(): string {
@@ -141,44 +106,12 @@ export class ScriptBuilder {
     loop += '    echo "Processing $file file..."\n';
     loop += '    name="$(basename -- $file)"\n';
     loop += '\n';
-
-    let cpt = 1;
-    this.formData.jar.forEach((jarFile) => {
-      if (jarFile.multiValueArgs.length !== 0) {
-        loop += '    for option in ${!VARIABLE_ARG' + this.checkIndex(cpt) + '[@]}\n';
-        loop += '    do\n';
-      }
-
-      //TODO NAMING OF LOG FILES + LOG OPTIONS
-
-      if (jarFile.multiValueArgs.length !== 0) {
-        loop +=
-          '      srun -n1 -N1 java $JVMARGS -jar $JARFILE' +
-          this.checkIndex(cpt) +
-          ' $file ${VARIABLE_ARG' +
-          this.checkIndex(cpt) +
-          '[$option]} $ARGS' +
-          this.checkIndex(cpt) +
-          ' > $LOGDIR/${name%%.*}' +
-          this.checkIndex(cpt) +
-          '.$option.out &\n';
-      } else {
-        loop +=
-          '    srun -n1 -N1 java $JVMARGS -jar $JARFILE' +
-          this.checkIndex(cpt) +
-          ' $file $ARGS' +
-          this.checkIndex(cpt) +
-          ' > $LOGDIR/${name%%.*}' +
-          this.checkIndex(cpt) +
-          '.$option.out &\n';
-      }
-
-      if (jarFile.multiValueArgs.length !== 0) {
-        loop += '    done\n';
-      }
-      loop += '\n';
-      cpt++;
-    });
+    loop += '    for command in "${commands[@]}"\n    do\n';
+    loop += '      command_to_run=$(eval echo "$command")\n';
+    loop += '      echo "Running $command_to_run"\n';
+    loop += '      srun -n1 -N1 $command_to_run\n';
+    loop += '    done\n';
+    loop += '\n';
 
     if (this.isEmpty(this.formData.population.grepFilter)) {
       loop += '  #fi\n';
@@ -193,11 +126,52 @@ export class ScriptBuilder {
   }
 
   private writeZip(): string {
-    // static ?
     return 'zip -jr $SLURM_JOB_NAME-$SLURM_JOB_ID.zip $LOGDIR';
   }
 
-  public export(): string {
+  private generateCommandList(): string {
+    let commandList = '';
+    if (this.formData.jar[0].file === null) return commandList;
+
+    let cpt = 0;
+
+    this.formData.jar.forEach((jarFile) => {
+      if (jarFile.multiValueArgs.length !== 0) {
+        jarFile.multiValueArgs.forEach((arg) => {
+          arg.values.forEach((val) => {
+            commandList += 'java $JVMARGS -jar $JARDIR/' + jarFile.name + ' $file';
+            if (jarFile.defaultArgs !== '') {
+              commandList += ' ' + jarFile.defaultArgs;
+            }
+            commandList += ' ' + arg.paramName + ' ' + val;
+
+            if (this.formData.logOptions) {
+              commandList += ' > $LOGDIR/' + jarFile.name.split('.jar')[0] + '.$name.' + cpt + '.out\n';
+            } else {
+              commandList += '\n';
+            }
+            cpt++;
+          });
+        });
+      } else {
+        commandList += 'java $JVMARGS -jar $JARDIR/' + jarFile.name + ' $file';
+
+        if (jarFile.defaultArgs !== '') {
+          commandList += ' ' + jarFile.defaultArgs;
+        }
+        if (this.formData.logOptions) {
+          commandList += ' > $LOGDIR/' + jarFile.name.split('.jar')[0] + '.$name.' + cpt + '.out\n';
+        } else {
+          commandList += '\n';
+        }
+        cpt++;
+      }
+    });
+
+    return commandList.trim();
+  }
+
+  public export(): { bashScript: string; commandList: string } {
     const scriptParts: string[] = [
       this.writeHeaders(),
       this.spacer(),
@@ -208,14 +182,19 @@ export class ScriptBuilder {
       this.writeFiles(),
       this.writeLogs(),
       this.writeJVMArgs(),
+      this.writeJarPath(),
+      this.writeJavaLinesPath(),
       this.spacer(),
-      this.writeLoopConfig(),
       this.writeLoops(),
       this.spacer(),
       this.writeWait(),
       this.writeZip(),
     ];
 
-    return scriptParts.join('\n');
+    const bashScript = scriptParts.join('\n');
+    if (this.formData.jar.length === 0) return { bashScript, commandList: '' };
+    const commandList = this.generateCommandList();
+
+    return { bashScript, commandList };
   }
 }
