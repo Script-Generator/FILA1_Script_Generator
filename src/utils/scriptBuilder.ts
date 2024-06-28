@@ -153,7 +153,7 @@ export class ScriptBuilder {
             commandList += ' ' + arg.paramName + ' ' + val;
 
             if (this.formData.logOptions) {
-              commandList += ' > $LOGDIR/' + jarFile.name.split('.jar')[0] + '.$name' + cpt + '.out\n';
+              commandList += ' > $LOGDIR/' + jarFile.name.split('.jar')[0] + '.$name.' + cpt + '.out\n';
             } else {
               commandList += '\n';
             }
@@ -167,7 +167,7 @@ export class ScriptBuilder {
           commandList += ' ' + jarFile.defaultArgs;
         }
         if (this.formData.logOptions) {
-          commandList += ' > $LOGDIR/' + jarFile.name.split('.jar')[0] + '.$name' + cpt + '.out\n';
+          commandList += ' > $LOGDIR/' + jarFile.name.split('.jar')[0] + '.$name.' + cpt + '.out\n';
         } else {
           commandList += '\n';
         }

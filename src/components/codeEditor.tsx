@@ -24,6 +24,11 @@ const CodeEditor = () => {
     setValue2(new ScriptBuilder(formObject).export().commandList);
   }, [formObject]);
 
+  const handleValueChange = (newValue: string) => {
+    setValue(newValue);
+    console.log(value);
+  };
+
   return (
     <div className="p-4 flex flex-col w-full overflow-scroll">
       <h1 className="text-x2 font-bold p-1">Script :</h1>
@@ -36,6 +41,7 @@ const CodeEditor = () => {
           lineNumbers: true,
           tabSize: 4,
         }}
+        onChange={(value) => handleValueChange(value)}
       />
       <h1 className="text-x2 font-bold p-1">Command list :</h1>
       <CodeMirror
