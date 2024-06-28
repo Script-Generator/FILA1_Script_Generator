@@ -5,8 +5,9 @@ import Configuration from '@/components/configuration.tsx';
 import Sbatch from '@/components/sbatch.tsx';
 import Population from '@/components/population/population.tsx';
 import JvmArgs from '@/components/jvmArgs.tsx';
+import LogOption from '@/components/log';
 
-const components = [Configuration, ServerPath, Sbatch, Population, JvmArgs, Jar];
+const components = [Configuration, ServerPath, Sbatch, Population, JvmArgs, Jar, LogOption];
 
 const FormParams = () => {
   return (

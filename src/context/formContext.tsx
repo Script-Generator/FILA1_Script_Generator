@@ -23,7 +23,7 @@ export const FormProvider = ({ children }: { children: ReactNode }) => {
     population: { name: '', file: null, params: '', grepFilter: '' },
     jvmArgs: '',
     jar: [{ name: '', file: null, defaultArgs: '', multiValueArgs: [] }],
-    logOptions: '',
+    logOptions: false,
   });
 
   return <FormContext.Provider value={{ formObject, setFormObject }}>{children}</FormContext.Provider>;

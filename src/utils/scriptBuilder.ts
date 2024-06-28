@@ -114,8 +114,9 @@ export class ScriptBuilder {
     loop += '    name="$(basename -- $file)"\n';
     loop += '\n';
     loop += '    for command in "${commands[@]}"\n    do\n';
-    loop += '      echo "Running $command"\n';
-    loop += '      srun -n1 -N1 $command\n';
+    loop += '      command_to_run=$(eval echo "$command")\n';
+    loop += '      echo "Running $command_to_run"\n';
+    loop += '      srun -n1 -N1 $command_to_run\n';
     loop += '    done\n';
     loop += '\n';
 
@@ -139,25 +140,38 @@ export class ScriptBuilder {
     let commandList = '';
     if (this.formData.jar[0].file === null) return commandList;
 
+    let cpt = 0;
+
     this.formData.jar.forEach((jarFile) => {
       if (jarFile.multiValueArgs.length !== 0) {
         jarFile.multiValueArgs.forEach((arg) => {
           arg.values.forEach((val) => {
-            commandList += 'java $JVMARGS -jar $JARFILE/' + jarFile.name;
+            commandList += 'java $JVMARGS -jar $JARDIR/' + jarFile.name + ' $file';
             if (jarFile.defaultArgs !== '') {
               commandList += ' ' + jarFile.defaultArgs;
             }
-            commandList +=
-              ' ' + arg.paramName + ' ' + val + ' > $LOGDIR/' + jarFile.name.split('.jar')[0] + '.${name}.out\n';
+            commandList += ' ' + arg.paramName + ' ' + val;
+
+            if (this.formData.logOptions) {
+              commandList += ' > $LOGDIR/' + jarFile.name.split('.jar')[0] + '.$name' + cpt + '.out\n';
+            } else {
+              commandList += '\n';
+            }
+            cpt++;
           });
         });
       } else {
-        commandList += 'java $JVMARGS -jar $JARFILE/' + jarFile.name;
+        commandList += 'java $JVMARGS -jar $JARDIR/' + jarFile.name + ' $file';
 
         if (jarFile.defaultArgs !== '') {
           commandList += ' ' + jarFile.defaultArgs;
         }
-        commandList += ' > $LOGDIR/' + jarFile.name.split('.jar')[0] + '.${name}.out\n';
+        if (this.formData.logOptions) {
+          commandList += ' > $LOGDIR/' + jarFile.name.split('.jar')[0] + '.$name' + cpt + '.out\n';
+        } else {
+          commandList += '\n';
+        }
+        cpt++;
       }
     });
 

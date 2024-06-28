@@ -4,7 +4,7 @@ export interface FormObject {
   population: Population;
   jvmArgs: string;
   jar: Jar[];
-  logOptions: string; //todo
+  logOptions: boolean;
 }
 
 export interface Jar {
