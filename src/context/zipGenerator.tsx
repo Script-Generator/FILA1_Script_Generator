@@ -72,12 +72,6 @@ const ZipGeneratorComponent: React.FC<ZipGeneratorComponentProps> = ({ codeEdito
   };
 
   const handleUpload = async () => {
-    if (!isFormValid) {
-      setErrorMessage('Some fields are invalid or empty. Please correct them before exporting.');
-      return;
-    } else {
-      setErrorMessage(null);
-    }
     const zip = new JSZip();
 
     const instancesFolder = zip.folder(TreeStructureEnum.INSTANCES);
@@ -121,13 +115,13 @@ const ZipGeneratorComponent: React.FC<ZipGeneratorComponentProps> = ({ codeEdito
     }
 
     zip.folder(TreeStructureEnum.LOGS);
-    zip.file('commandLines.txt', javaCommandValue);
     zip.file('script.sh', codeEditorValue);
 
     const content = await zip.generateAsync({ type: 'blob' });
 
     const formData = new FormData();
     formData.append('file', content, 'script.zip');
+    formData.append('serverPath', formObject.serverPath);
 
     try {
       const response = await fetch('http://localhost:5001/upload', {
